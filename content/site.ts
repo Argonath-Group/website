@@ -71,6 +71,8 @@ export interface HomeCopy {
     heading: string; // TODO(content)
     items: HomeLiveWorkItem[];
   };
+  /** Heading for the selected-work archive block on Home. */
+  selectedWorkHeading: string;
   labTeaser: {
     heading: string; // TODO(content)
     body: string; // TODO(content)
@@ -99,21 +101,18 @@ export const homeCopy: HomeCopy = {
     blocks: [
       {
         title: "Visual Language Systems",
-        // TODO(content)
         description:
-          "Formal systems for generating, structuring, and evolving visual identity at scale.",
+          "Teaching, representing, and annotating sign language — how a visual language is learned, structured, and made legible to people and machines.",
       },
       {
         title: "Human-in-the-Loop Data",
-        // TODO(content)
         description:
-          "Pipelines where expert judgement and machine processing reinforce each other.",
+          "Connecting domain experts to curation pipelines — pipelines where expert judgement shapes the data machines learn from.",
       },
       {
         title: "Adaptive Interfaces",
-        // TODO(content)
         description:
-          "Interfaces that reshape themselves around context, intent, and the person using them.",
+          "Localization, personalization, and learning systems — interfaces that reshape themselves around the person using them.",
       },
     ],
   },
@@ -125,16 +124,17 @@ export const homeCopy: HomeCopy = {
         slug: "akita",
         name: "Akita",
         oneLiner:
-          "An adaptive visual identity engine that generates brand systems per market, per moment.",
+          "Our first product — a sign language learning app that adapts to your country's sign language.",
       },
       {
         slug: "labeler",
         name: "Labeler",
         oneLiner:
-          "A trust and skills network connecting companies with verified data professionals.",
+          "A marketplace for curated visual datasets, connecting companies with the professionals who annotate them.",
       },
     ],
   },
+  selectedWorkHeading: "Selected work",
   labTeaser: {
     // TODO(content)
     heading: "The Lab",
@@ -242,33 +242,33 @@ export interface AkitaCopy {
 export const akitaCopy: AkitaCopy = {
   name: "Akita",
   overview:
-    "Akita is an adaptive visual identity engine: a system that generates brand visuals that respond to market, audience, and context instead of shipping one fixed identity everywhere.",
+    "Akita is a sign language learning app — our first product. It starts from an insight most learning apps ignore: sign languages are national, not universal. ASL, BSL, LSE, and LSF are distinct languages, yet most apps pick one and ship it everywhere.",
   whatItDoes: [
-    // TODO(content) — placeholder capability statements
-    "Generates on-brand visual variations from a compact design-language definition.",
-    "Tunes composition, palette, and motion per market and per placement.",
-    "Stays inside brand constraints while never repeating the same output twice.",
+    "Teaches a national sign language through structured, adaptive lessons.",
+    "Adapts curriculum and vocabulary to the learner's country and its sign language.",
+    // TODO(content)
+    "Accounts for regional variation and fingerspelling within each language.",
   ],
   perCountryAdaptivity:
-    "Akita treats identity as a language, not a logo file. The same brand speaks differently in each market — adjusting visual register, cultural references, and format behaviour while remaining unmistakably itself.", // TODO(content)
+    "Sign languages are national, not universal. BSL and ASL are as different from each other as spoken languages are. Akita treats the learner's country as the first design input: curriculum sequence, vocabulary sets, and regional variation all adapt to the national sign language — LSE for Spain, LSF for France, ASL for the United States — instead of forcing a single language on everyone.",
   capabilities: [
-    // TODO(content) — placeholder capability list
-    "Parametric identity generation",
-    "Market- and audience-aware adaptation",
-    "Template-free campaign asset production",
-    "Design-system integration",
+    // TODO(content) — capability list pending review
+    "Per-country curriculum adaptation",
+    "National sign language coverage (ASL, BSL, LSE, LSF, …)",
+    "Regional variation and fingerspelling support",
+    "Adaptive pacing and review",
   ],
   demo: {
     // TODO(content)
     heading: "Try Akita",
-    body: "See how one brand language adapts across markets in real time.",
-    ctaLabel: "Open the live demo",
+    body: "Akita is in active development. A public demo is coming.",
+    ctaLabel: "Try Akita",
     ctaHref: "#", // TODO(content) — real demo URL
   },
   documentation: {
     // TODO(content)
     heading: "Documentation",
-    body: "Technical notes on the identity engine, its constraint model, and integration APIs.",
+    body: "Technical notes on the adaptive curriculum and the per-country content model.",
     ctaHref: "#", // TODO(content) — real docs URL
   },
 };
@@ -306,14 +306,14 @@ const mailto = (subject: string) =>
 export const labelerCopy: LabelerCopy = {
   name: "Labeler",
   overview:
-    "Labeler is a trust and skills network for data work: it connects companies that need high-judgement data tasks done with verified professionals who can do them.", // TODO(content)
+    "Labeler is a marketplace for curated visual datasets. Companies that need annotated data apply and define their dataset; vetted professionals — many with sign-language and visual-domain expertise — annotate it. The value is curation, not raw labor.", // TODO(content)
   forCompanies: {
     heading: "For companies",
     points: [
       // TODO(content)
-      "Access a network of verified data professionals.",
-      "Match work to demonstrated skills, not claims.",
-      "Quality and trust built into the pipeline.",
+      "Apply and define the dataset you need.",
+      "Get matched with vetted professionals.",
+      "Receive curated, quality-assured data.",
     ],
     cta: {
       label: "Apply as a company",
@@ -324,9 +324,9 @@ export const labelerCopy: LabelerCopy = {
     heading: "For professionals",
     points: [
       // TODO(content)
-      "Get verified for the skills you actually have.",
-      "Receive work matched to your expertise.",
-      "Build a portable reputation across engagements.",
+      "Apply and get verified for your skills.",
+      "Get matched on expertise — including sign language and visual domains.",
+      "Complete tasks and receive payment.",
     ],
     cta: {
       label: "Apply as a professional",
@@ -337,14 +337,15 @@ export const labelerCopy: LabelerCopy = {
     heading: "How it works",
     steps: [
       // TODO(content)
-      "Companies submit data work with skill requirements.",
-      "Verified professionals are matched by demonstrated skill.",
-      "Work is completed, reviewed, and feeds back into trust scores.",
+      "A company applies and defines the dataset it needs.",
+      "Labeler matches the work with vetted professionals by skill.",
+      "Professionals annotate; every task is quality-reviewed.",
+      "Curated data is delivered to the company.",
     ],
   },
   trustAndSkills: {
     heading: "Trust & skills",
-    body: "Labeler's core object is the skill credential: an earned, verifiable signal of what a professional can actually do. Trust compounds with every reviewed engagement.", // TODO(content)
+    body: "Professionals are vetted for the skills they actually claim — sign language fluency and visual-domain expertise are verified, not self-reported. Work is reviewed before delivery, so quality compounds with every completed task.", // TODO(content)
   },
 };
 
