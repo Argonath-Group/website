@@ -184,3 +184,77 @@ this site. The table schema (SQL) lives in `content/TODO.md`.
 edge cases leaking into page code. State C is the realistic production
 failure mode, so the contract optimizes for graceful degradation to the
 mailto path rather than hard failure.
+
+## D-011 — Site URL, metadataBase, sitemap, robots, OG image (QA pass)
+
+**Context:** Deploy-readiness QA found no sitemap, no robots, no OG
+image, no `metadataBase`, and no per-route metadata on `work/[slug]`
+(D-009 had deferred the OG image to the QA agent).
+
+**Decision:**
+- `lib/site-url.ts` exports `SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
+  ?? "https://argonathgroup.com"` — env-optional, one fallback, used by
+  `metadataBase` (app/layout.tsx), `app/sitemap.ts`, and `app/robots.ts`.
+  **TODO(content):** the fallback domain is assumed, not confirmed.
+- `app/sitemap.ts` lists every static route plus every `workEntries`
+  href and every `labEntries` slug. No `lastModified` (the content dates
+  are TODO stubs), so the sitemap stays fully static.
+- `app/robots.ts` allows everything and points at the sitemap.
+- `app/opengraph-image.tsx` fulfills D-009: a static 1200×630 build-time
+  `ImageResponse` (next/og) — typography-led, design tokens only (paper,
+  ink, signal blue, mono register), no new deps, no sharp, no runtime
+  generation.
+- `app/work/[slug]/page.tsx` gained `generateMetadata` (title +
+  description from the `WorkEntry`); `app/lab/[slug]` already had it.
+
+**Rationale:** All four artifacts are static and config-free, so Vercel
+free tier is unaffected and the no-env clean-room build still passes.
+
+## D-012 — Mailto subjects: encode spaces only, keep the em-dash literal
+
+**Context:** QA found the Labeler CTA hrefs rendered
+`subject=Labeler%20%E2%80%94%20Company%20application` (full
+`encodeURIComponent`), while the agreed contract is
+`Labeler%20—%20Company%20application` (spaces encoded, em-dash literal).
+
+**Decision:** The `mailto` helper in `content/site.ts` now encodes
+spaces only (`subject.replace(/ /g, "%20")`). Em-dashes and word
+characters stay literal; mail clients decode identically and the hrefs
+match the contract exactly.
+
+## D-013 — gray-500 darkened to #6A6A64 (WCAG AA fix)
+
+**Context:** QA measured the meta/secondary gray used across the site at
+small sizes: `#787870` on paper = **4.29:1**, below WCAG AA 4.5:1 for
+normal text (it appears in mono meta labels, archive metadata, founder
+roles). `#9C9C94` (gray-400) on paper = 2.67:1 and was used as visible
+text for the Lab index numbers.
+
+**Decision:** `--color-gray-500` is now `#6A6A64` (5.25:1 on paper,
+4.89:1 on gray-100). The Lab index numbers moved from gray-400 to
+gray-500. The accent blues are unchanged (6.55:1 / 6.36:1). Remaining
+gray-400 usages are `aria-hidden` decorations (archive column labels,
+row arrows) where contrast rules do not apply.
+
+## D-014 — No literal "TODO(content)" in visible HTML
+
+**Context:** QA found the literal token `TODO(content)` rendered in the
+built HTML of /about (founder bios), /contact (location/timezone rows),
+and all four lab detail pages.
+
+**Decision:** Stubs now render as designed markers — "Bio forthcoming.",
+"To be confirmed.", "Documentation pending" — matching the existing
+designed-placeholder convention (dashed frames, mono meta register). The
+`TODO(content)` marker survives only in source comments and
+`content/TODO.md`, never in visible output.
+
+## D-015 — work/[slug] renders through CaseStudy instead of a dev stub
+
+**Context:** The dynamic work-detail route rendered
+`Route: /work/{slug} — {name}` — a dev placeholder leaking into
+production HTML for /work/signal-field and /work/parallax-loom.
+
+**Decision:** The route now composes the shared `CaseStudy` template
+(D-006) with the entry's real archive data (tag, name, one-liner, year,
+overview) plus a designed "Case study in progress" placeholder block —
+same convention as the Lab (D-014). No invented case-study content.

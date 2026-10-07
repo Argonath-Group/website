@@ -24,8 +24,8 @@ function FounderCard({ founder, index }: { founder: Founder; index: number }) {
     .slice(0, 2)
     .toUpperCase();
 
-  // Bios ship as "TODO(content)" stubs until real copy arrives — say so
-  // on the page instead of printing the marker as prose.
+  // Bios ship as stubs until real copy arrives — the page says so in a
+  // designed marker instead of printing the raw TODO token as prose.
   const bioMissing = founder.bio.trim().startsWith("TODO");
 
   return (
@@ -51,7 +51,7 @@ function FounderCard({ founder, index }: { founder: Founder; index: number }) {
 
         {bioMissing ? (
           <p className="mt-4 border-l-2 border-dashed border-gray-300 pl-4 font-mono text-meta leading-relaxed text-gray-500">
-            {"// TODO(content)"} — bio forthcoming.
+            Bio forthcoming.
           </p>
         ) : (
           <Prose className="mt-4">

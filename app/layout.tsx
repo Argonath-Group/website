@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import { siteMeta } from "@/content/site";
+import { SITE_URL } from "@/lib/site-url";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
@@ -34,6 +35,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL), // D-011: env-optional, domain assumed
   title: {
     default: siteMeta.name,
     template: `%s — ${siteMeta.name}`,

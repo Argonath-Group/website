@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: contactCopy.body,
 };
 
-/** Location/timezone ship as "TODO(content)" stubs until confirmed. */
+/** Location/timezone ship as stubs until confirmed. */
 function MetaRow({ label, value }: { label: string; value: string }) {
   const missing = value.trim().startsWith("TODO");
   return (
@@ -19,8 +19,8 @@ function MetaRow({ label, value }: { label: string; value: string }) {
         {label}
       </dt>
       {missing ? (
-        <dd className="font-mono text-meta uppercase tracking-wide text-gray-400">
-          TODO(content)
+        <dd className="font-mono text-meta uppercase tracking-wide text-gray-500">
+          To be confirmed
         </dd>
       ) : (
         <dd className="text-body text-ink">{value}</dd>

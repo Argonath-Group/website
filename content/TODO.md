@@ -32,6 +32,14 @@ facts — replace stubs only with confirmed copy from the studio.
 - `labelerFormCopy` (D-010) — all application-form strings (labels,
   placeholders, submit/submitting labels, success + failure copy) are
   provisional; confirm final copy.
+- `SITE_URL` / production domain (D-011) — `lib/site-url.ts` falls back
+  to `https://argonathgroup.com`; confirm the real domain (or set
+  `NEXT_PUBLIC_SITE_URL`) before launch. The OG image, sitemap, and
+  robots output all derive from it.
+- `work/[slug]` detail pages (signal-field, parallax-loom) — pages ship
+  a designed "case study in progress" placeholder; confirm or write the
+  real case-study content for each seeded entry (see also
+  `workEntries` above).
 
 ## Required Supabase setup (D-010)
 

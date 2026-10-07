@@ -84,7 +84,7 @@ export default async function LabDetailPage({
             <Reveal delay={220}>
               <div className="mt-12 max-w-2xl border border-dashed border-gray-300 bg-gray-100 p-8">
                 <p className="font-mono text-meta uppercase tracking-wide text-gray-500">
-                  {"// TODO(content)"}
+                  Documentation pending
                 </p>
                 <p className="mt-3 text-body text-gray-600">
                   This experiment is still being documented. The notes, images,

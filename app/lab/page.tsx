@@ -84,7 +84,7 @@ export default function LabPage() {
                     href={`/lab/${entry.slug}`}
                     className="group grid grid-cols-[auto_1fr] items-baseline gap-x-6 gap-y-4 py-8 md:grid-cols-[4rem_1fr_auto] md:gap-x-10 md:py-10"
                   >
-                    <span className="font-mono text-meta uppercase tracking-wide text-gray-400">
+                    <span className="font-mono text-meta uppercase tracking-wide text-gray-500">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="min-w-0">

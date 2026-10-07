@@ -300,8 +300,14 @@ export interface LabelerCopy {
   };
 }
 
+/**
+ * mailto with ONLY spaces percent-encoded — the em-dash and other word
+ * characters stay literal so the subject reads correctly in mail clients
+ * and the hrefs match the agreed CTA contract exactly
+ * (`Labeler%20—%20Company%20application`).
+ */
 const mailto = (subject: string) =>
-  `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
+  `mailto:${CONTACT_EMAIL}?subject=${subject.replace(/ /g, "%20")}`;
 
 export const labelerCopy: LabelerCopy = {
   name: "Labeler",

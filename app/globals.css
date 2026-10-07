@@ -18,7 +18,7 @@
   --color-gray-200: #e7e7e1;
   --color-gray-300: #d3d3cb;
   --color-gray-400: #9c9c94;
-  --color-gray-500: #787870;
+  --color-gray-500: #6a6a64; /* 5.25:1 on paper — AA for small/meta text (was #787870 = 4.29:1, fail) */
   --color-gray-600: #555550;
   --color-gray-700: #3a3a36;
 
