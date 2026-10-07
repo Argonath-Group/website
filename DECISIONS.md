@@ -258,3 +258,39 @@ production HTML for /work/signal-field and /work/parallax-loom.
 (D-006) with the entry's real archive data (tag, name, one-liner, year,
 overview) plus a designed "Case study in progress" placeholder block —
 same convention as the Lab (D-014). No invented case-study content.
+
+## D-016 — SITE_URL normalization: tolerate env values without a protocol
+
+**Context:** The Vercel production build failed with
+`ERR_INVALID_URL: new URL(SITE_URL)` because `NEXT_PUBLIC_SITE_URL` was
+set to `argonathgroup.com` — no `https://` prefix — and the raw value
+was fed into `new URL()` for `metadataBase`.
+
+**Decision:** `lib/site-url.ts` normalizes the env value instead of
+requiring an exact format: trim whitespace, strip trailing slashes, and
+prepend `https://` when no `http(s)://` prefix is present. Empty/absent
+falls back to `https://argonathgroup.com`. The export stays a plain
+string constant, safe for `new URL()` at module scope in any
+environment.
+
+**Rationale:** Env values typed by hand in dashboards are unreliable at
+the edges; normalizing at the single point of consumption (this module)
+is cheaper than fixing every deployment's env format and never breaks
+the no-env build.
+
+## D-017 — @vercel/analytics for page-view analytics
+
+**Context:** The studio wants lightweight, privacy-friendly traffic
+measurement without adding infrastructure.
+
+**Decision:** Added `@vercel/analytics@^2` (the one new runtime
+dependency). `app/layout.tsx` renders `<Analytics />` from
+`@vercel/analytics/next` as the last child of `<body>`, so every route
+is measured once from the root layout. It is a client component inside
+the server layout, needs no env vars, and does not affect the no-env
+build or the static prerender of any page.
+
+**Rationale:** Zero-config on Vercel, free-tier friendly, first-party,
+and no cookie/consent surface beyond Vercel's standard data policy —
+versus self-hosted analytics (new infra) or a third-party script
+(external dependency + CSP surface).

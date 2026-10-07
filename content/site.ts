@@ -124,13 +124,13 @@ export const homeCopy: HomeCopy = {
         slug: "akita",
         name: "Akita",
         oneLiner:
-          "Our first product — a sign language learning app that adapts to your country's sign language.",
+          "Our first product — a sign language learning app that adapts to your country's sign language, starting in Ecuador.",
       },
       {
         slug: "labeler",
         name: "Labeler",
         oneLiner:
-          "A marketplace for curated visual datasets, connecting companies with the professionals who annotate them.",
+          "A marketplace for curated visual datasets, connecting companies across Latin America — starting in Ecuador — with the professionals who annotate them.",
       },
     ],
   },
@@ -242,26 +242,26 @@ export interface AkitaCopy {
 export const akitaCopy: AkitaCopy = {
   name: "Akita",
   overview:
-    "Akita is a sign language learning app — our first product. It starts from an insight most learning apps ignore: sign languages are national, not universal. ASL, BSL, LSE, and LSF are distinct languages, yet most apps pick one and ship it everywhere.",
+    "Akita is a sign language learning app — the studio's first product, launching in Ecuador and expanding across Latin America. It starts from an insight most learning apps ignore: sign languages are national, not universal. Every country has its own sign language, and most apps pick one and ship it everywhere.",
   whatItDoes: [
-    "Teaches a national sign language through structured, adaptive lessons.",
-    "Adapts curriculum and vocabulary to the learner's country and its sign language.",
+    "Teaches Ecuadorian Sign Language first, through structured, adaptive lessons.",
+    "Is built to adapt its curriculum and vocabulary to each country's own sign language as it expands across Latin America.",
     // TODO(content)
-    "Accounts for regional variation and fingerspelling within each language.",
+    "Accounts for regional variation within Ecuador.",
   ],
   perCountryAdaptivity:
-    "Sign languages are national, not universal. BSL and ASL are as different from each other as spoken languages are. Akita treats the learner's country as the first design input: curriculum sequence, vocabulary sets, and regional variation all adapt to the national sign language — LSE for Spain, LSF for France, ASL for the United States — instead of forcing a single language on everyone.",
+    "Sign languages are national, not universal — Ecuador's sign language and those of its neighbors are distinct languages, as different from each other as spoken ones. Akita launches with Ecuadorian Sign Language and treats the learner's country as the first design input: curriculum sequence, vocabulary, and regional variation all follow the national sign language, with expansion across Latin America planned.", // TODO(content) — confirm expansion framing
   capabilities: [
     // TODO(content) — capability list pending review
-    "Per-country curriculum adaptation",
-    "National sign language coverage (ASL, BSL, LSE, LSF, …)",
-    "Regional variation and fingerspelling support",
+    "Ecuadorian Sign Language curriculum",
+    "Per-country curriculum adaptation as we expand",
+    "Regional variation support",
     "Adaptive pacing and review",
   ],
   demo: {
     // TODO(content)
     heading: "Try Akita",
-    body: "Akita is in active development. A public demo is coming.",
+    body: "Akita is in development in Ecuador. A public demo is coming.",
     ctaLabel: "Try Akita",
     ctaHref: "#", // TODO(content) — real demo URL
   },
@@ -312,13 +312,13 @@ const mailto = (subject: string) =>
 export const labelerCopy: LabelerCopy = {
   name: "Labeler",
   overview:
-    "Labeler is a marketplace for curated visual datasets. Companies that need annotated data apply and define their dataset; vetted professionals — many with sign-language and visual-domain expertise — annotate it. The value is curation, not raw labor.", // TODO(content)
+    "Labeler is a marketplace for curated visual datasets, operating in Ecuador and expanding across Latin America. Companies that need annotated data apply and define their dataset; vetted professionals across the region — many with sign-language and visual-domain expertise — annotate it. The value is curation, not raw labor.", // TODO(content)
   forCompanies: {
     heading: "For companies",
     points: [
       // TODO(content)
       "Apply and define the dataset you need.",
-      "Get matched with vetted professionals.",
+      "Get matched with vetted professionals across Ecuador and Latin America.",
       "Receive curated, quality-assured data.",
     ],
     cta: {
@@ -330,7 +330,7 @@ export const labelerCopy: LabelerCopy = {
     heading: "For professionals",
     points: [
       // TODO(content)
-      "Apply and get verified for your skills.",
+      "Apply and get verified for your skills, starting in Ecuador.",
       "Get matched on expertise — including sign language and visual domains.",
       "Complete tasks and receive payment.",
     ],

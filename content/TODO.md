@@ -40,6 +40,11 @@ facts — replace stubs only with confirmed copy from the studio.
   a designed "case study in progress" placeholder; confirm or write the
   real case-study content for each seeded entry (see also
   `workEntries` above).
+- Ecuador-first positioning (studio correction) — all Akita and Labeler
+  copy is anchored to Ecuador-first + Latin America expansion, with NO
+  ASL or European sign-language coverage claimed. The expansion framing
+  in `akitaCopy.perCountryAdaptivity` and the regional phrasing in
+  `labelerCopy` still need final confirmation from the studio.
 
 ## Required Supabase setup (D-010)
 

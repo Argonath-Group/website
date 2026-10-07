@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { siteMeta } from "@/content/site";
 import { SITE_URL } from "@/lib/site-url";
 import { Nav } from "@/components/layout/Nav";
@@ -70,6 +71,9 @@ export default function RootLayout({
         </div>
 
         <Footer />
+
+        {/* D-017: Vercel Analytics — zero-config page views, free tier. */}
+        <Analytics />
       </body>
     </html>
   );
