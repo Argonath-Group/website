@@ -453,3 +453,65 @@ export const contactCopy: ContactCopy = {
   location: "TODO(content)", // TODO(content)
   timezone: "TODO(content)", // TODO(content)
 };
+
+/* ------------------------------------------------------------------ */
+/* Labeler application form (D-010) — copy for the Supabase-backed    */
+/* inline form rendered by ApplyCTA when Supabase is enabled.          */
+/* APPEND-ONLY section: added by agent 5b; existing entries untouched. */
+/* ------------------------------------------------------------------ */
+
+export interface LabelerFormCopy {
+  /** Accessible <label> for each field. */
+  labels: {
+    name: string;
+    email: string;
+    message: string;
+  };
+  placeholders: {
+    name: string;
+    email: string;
+    message: string;
+  };
+  submitLabel: string;
+  submittingLabel: string;
+  success: {
+    heading: string;
+    body: string;
+  };
+  failure: {
+    heading: string;
+    /** Body copy; always followed by the mailto fallback link. */
+    body: string;
+    fallbackLabel: string;
+  };
+  /** Generic per-field error prefix; field name is appended. */
+  fieldErrorRequired: string;
+  invalidEmail: string;
+}
+
+export const labelerFormCopy: LabelerFormCopy = {
+  // TODO(content) — all form strings pending final copy.
+  labels: {
+    name: "Name",
+    email: "Email",
+    message: "Message",
+  },
+  placeholders: {
+    name: "Your full name",
+    email: "you@example.com",
+    message: "Tell us briefly about your company or your work.",
+  },
+  submitLabel: "Send application",
+  submittingLabel: "Sending…",
+  success: {
+    heading: "Application received",
+    body: "Thank you — we review every application personally and will reply from our own inbox.",
+  },
+  failure: {
+    heading: "Something went wrong",
+    body: "The form could not send your application. You can always reach us directly:",
+    fallbackLabel: "Email us instead",
+  },
+  fieldErrorRequired: "Required field:",
+  invalidEmail: "Enter a valid email address.",
+};

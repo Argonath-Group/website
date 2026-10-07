@@ -1,6 +1,7 @@
 import { isSupabaseEnabled } from "@/lib/supabase";
 import { labelerCopy } from "@/content/site";
 import { LinkButton } from "@/components/ui/Button";
+import { ApplyForm } from "@/components/apply/ApplyForm";
 
 /**
  * ApplyCTA — THE feature-flagged application CTA for Labeler (D-007).
@@ -14,10 +15,10 @@ import { LinkButton } from "@/components/ui/Button";
  *  - Supabase NOT configured (isSupabaseEnabled() === false):
  *    renders a primary mailto link to CONTACT_EMAIL whose subject and
  *    label come from labelerCopy (already URL-encoded in content).
- *  - Supabase configured: renders the marked placeholder slot below,
- *    which agent 5b replaces with the real application form. Keep the
- *    `data-apply-slot` attribute and the `type` prop contract stable —
- *    the form should render in place without callers changing.
+ *  - Supabase configured: renders the inline application form (a client
+ *    component, D-010) inside the marked slot below. The
+ *    `data-apply-slot` attribute and the `type` prop contract stay stable
+ *    so callers and tests never change.
  *
  * This component is a server component by design: the flag is read at
  * request time. Agent 5b may nest a client component inside the slot.
@@ -38,16 +39,13 @@ export function ApplyCTA({ type }: ApplyCTAProps) {
     );
   }
 
-  /* TODO(agent-5b): replace this placeholder with the Supabase-backed
-     application form for `type`. Keep the wrapper attributes so pages
-     and tests can target the slot. */
   return (
     <div
       data-apply-slot
       data-apply-type={type}
-      className="border border-dashed border-gray-400 p-8 font-mono text-meta uppercase tracking-wide text-gray-500"
+      className="border-t border-ink pt-8"
     >
-      Application form — pending (Supabase enabled)
+      <ApplyForm type={type} />
     </div>
   );
 }

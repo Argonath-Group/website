@@ -146,3 +146,41 @@ generation, no new dependencies.
 
 **Rationale:** Out of the design-system scope; a static asset fits the
 zero-dependency budget.
+
+## D-010 — /api/apply: Supabase-backed application endpoint
+
+**Context:** Labeler applications need an inline form when Supabase is
+configured (D-007 flag), but the site must build, run, and behave
+correctly with zero env vars.
+
+**Decision:** Three states, one code path:
+
+- **A. Disabled** (`isSupabaseEnabled() === false`, the no-env default):
+  `GET` and `POST` on `/api/apply` return 404 JSON; `ApplyCTA` renders the
+  mailto `LinkButton` exactly as before.
+- **B. Enabled + valid env:** `ApplyCTA` renders the inline form
+  (`components/apply/ApplyForm.tsx`, client component) posting to the
+  route. The route validates by hand (no zod — zero new validation deps),
+  inserts `{ type, name, email, message, created_at }` into the Supabase
+  table `labeler_applications` with the anon key, and returns
+  `{ ok: true }`.
+- **C. Enabled + malformed env** (bad URL, rejected key, RLS denial,
+  missing table): the form still renders (the flag only checks presence);
+  every failure — rejected Supabase result or thrown exception — is caught
+  and returned as **502 JSON `{ ok: false, error }`**. The route has a
+  last-resort catch and can never crash with a 500 HTML page; the form's
+  failure state always shows the mailto fallback link so the applicant
+  always has an out.
+
+**New dependency:** `@supabase/supabase-js@^2` (the one approved addition).
+
+**Required Supabase setup (not code):** the `labeler_applications` table
+must exist with **RLS enabled and a policy allowing anonymous INSERT** —
+the anon key can only insert if the policy permits it. Applications are
+read back out-of-band ( Supabase dashboard / service key), never through
+this site. The table schema (SQL) lives in `content/TODO.md`.
+
+**Rationale:** One dependency (Supabase's first-party client), no zod, no
+edge cases leaking into page code. State C is the realistic production
+failure mode, so the contract optimizes for graceful degradation to the
+mailto path rather than hard failure.

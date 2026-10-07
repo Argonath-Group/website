@@ -29,3 +29,38 @@ facts — replace stubs only with confirmed copy from the studio.
 - `contactCopy.heading` / `contactCopy.body` — confirm heading and body.
 - `contactCopy.location` — studio location.
 - `contactCopy.timezone` — studio timezone.
+- `labelerFormCopy` (D-010) — all application-form strings (labels,
+  placeholders, submit/submitting labels, success + failure copy) are
+  provisional; confirm final copy.
+
+## Required Supabase setup (D-010)
+
+The `/api/apply` route inserts into `labeler_applications` using the
+**anon** key. Before enabling Supabase (`NEXT_PUBLIC_SUPABASE_URL` +
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`), create the table and allow anonymous
+inserts:
+
+```sql
+create table if not exists public.labeler_applications (
+  id         bigint generated always as identity primary key,
+  type       text not null check (type in ('company', 'professional')),
+  name       text not null,
+  email      text not null,
+  message    text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.labeler_applications enable row level security;
+
+create policy "anon can insert applications"
+  on public.labeler_applications
+  for insert
+  to anon
+  with check (true);
+```
+
+Notes:
+- Reading applications is NOT exposed through the site — use the Supabase
+  dashboard or a service key out-of-band.
+- If this setup is missing, the form degrades to its failure state with
+  the mailto fallback (state C in DECISIONS.md), so nothing breaks visibly.
