@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Tag";
 import { Reveal } from "@/components/ui/Reveal";
-import { LinkButton } from "@/components/ui/Button";
+import { InquireCTA } from "@/components/inquire/InquireCTA";
 import { akitaCopy, projectEntries } from "@/content/site";
 
 function requireProjectEntry(slug: string) {
@@ -118,9 +118,10 @@ export default function AkitaComingSoonPage() {
         </Container>
       </Section>
 
-      {/* Waitlist + partnership CTAs — mailto until Phase 2 wires the
-          form. Equal weight: interest from learners and from partners
-          are both first-class. */}
+      {/* Waitlist + partnership CTAs — InquireCTA (D-027): mailto while the
+          Supabase flag is off, locked-intent intake form when it is on.
+          Equal weight: interest from learners and from partners are both
+          first-class. */}
       <Section aria-labelledby="akita-cta">
         <Container>
           <Reveal>
@@ -128,15 +129,16 @@ export default function AkitaComingSoonPage() {
               {akitaCopy.waitlistCta.label} / {akitaCopy.partnerCta.label}
             </h2>
             <div className="flex flex-col gap-6 border-t-2 border-ink pt-10 md:flex-row md:items-center md:gap-10">
-              <LinkButton href={akitaCopy.waitlistCta.href} variant="primary">
-                {akitaCopy.waitlistCta.label}
-              </LinkButton>
-              <LinkButton
-                href={akitaCopy.partnerCta.href}
+              <InquireCTA
+                intent="akita_waitlist"
+                label={akitaCopy.waitlistCta.label}
+                variant="primary"
+              />
+              <InquireCTA
+                intent="akita_partnership"
+                label={akitaCopy.partnerCta.label}
                 variant="secondary"
-              >
-                {akitaCopy.partnerCta.label}
-              </LinkButton>
+              />
             </div>
           </Reveal>
         </Container>

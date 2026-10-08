@@ -27,6 +27,6 @@
  */
 
 export * from "./dictionaries/types";
-export { CONTACT_EMAIL } from "./dictionaries/shared";
+export { CONTACT_EMAIL, mailtoSubjects } from "./dictionaries/shared";
 export * from "./dictionaries/en";
 export { getDictionary } from "./dictionaries/get-dictionary";
