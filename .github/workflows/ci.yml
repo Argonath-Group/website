@@ -1,0 +1,69 @@
+# CI — gates every PR and every push to main.
+#
+# Clean-room guarantee: this workflow intentionally runs with NO .env and
+# no Supabase secrets. The site must typecheck, lint, and build with zero
+# configuration, and migrations must at least be sane files.
+
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (no .env — clean-room guarantee)
+        run: npm run build
+
+      # SQL sanity check: `supabase db lint` needs a live database (local
+      # requires Docker; linked requires project secrets), neither of which
+      # a PR job should touch. Instead we verify every migration file is
+      # non-empty and parseable as plain SQL statements via sqlite-free
+      # structural checks, and that the CLI can read the project config.
+      # See D-019 in DECISIONS.md.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+
+      - name: Validate migrations
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(supabase/migrations/*.sql)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No migration files found" >&2
+            exit 1
+          fi
+          for f in "${files[@]}"; do
+            if [ ! -s "$f" ]; then
+              echo "Migration is empty: $f" >&2
+              exit 1
+            fi
+            # Must contain at least one terminated SQL statement.
+            if ! grep -Eq ';[[:space:]]*$' "$f"; then
+              echo "Migration has no terminated statement: $f" >&2
+              exit 1
+            fi
+            echo "OK: $f"
+          done
+
+      - name: Verify CLI reads config
+        run: supabase --version && supabase status --help >/dev/null

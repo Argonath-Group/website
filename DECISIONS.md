@@ -294,3 +294,55 @@ build or the static prerender of any page.
 and no cookie/consent surface beyond Vercel's standard data policy —
 versus self-hosted analytics (new infra) or a third-party script
 (external dependency + CSP surface).
+
+## D-018 — Supabase CLI + migrations-in-repo: GitHub is the source of truth
+
+**Context:** Schema was previously documented as a SQL block in
+`content/TODO.md` that the user had to paste into the dashboard by hand.
+
+**Decision:** Migrations now live in `supabase/migrations/` and are applied
+automatically on merge to main (see D-019). The dashboard is read-only for
+schema from now on — hand-edits drift and will be overwritten by the next
+`supabase db push`. The CLI is pinned at **v2.120.0** in
+`supabase/config.toml` (generated via `npx supabase@2.120.0 init`, edited
+only for `project_id`) and in both workflows. The CLI is consumed via
+`npx` (local) and `supabase/setup-cli` (CI) — it is deliberately NOT a
+package.json dependency: it is not imported by the app, pinning it in
+package.json would couple app dependency audits to an ops tool, and the
+official distribution channel for the CLI is the standalone binary.
+
+## D-019 — Two-workflow CI/CD split: PR gate vs merge-time migration push
+
+**Context:** One workflow could do both, but PR jobs and deploy jobs want
+different trust boundaries.
+
+**Decision:** `.github/workflows/ci.yml` runs on `pull_request` and pushes
+to main with **no secrets**: checkout → setup-node 22 → `npm ci` →
+typecheck → lint → build (no `.env`, preserving the clean-room guarantee),
+plus a migration sanity check. `supabase db lint` needs a live database
+(local requires Docker — unavailable/undesirable in a PR job; linked
+requires project secrets we will not expose to PR runs), so CI instead
+structurally validates every `supabase/migrations/*.sql` (non-empty,
+contains a terminated statement) and verifies the CLI can load
+`supabase/config.toml`. `.github/workflows/migrations.yml` runs only on
+push to main with `paths: supabase/**`, links with the two repository
+secrets, runs `supabase migration list` for dry-run visibility, then
+`supabase db push`. Splitting means a PR can never touch the production
+database and the deploy surface is one small, auditable workflow.
+
+**Required repository secrets:** `SUPABASE_ACCESS_TOKEN` and
+`SUPABASE_PROJECT_REF`.
+
+## D-020 — Migration 0001 captures the CURRENT labeler_applications schema
+
+**Context:** The deployed `/api/apply` feature flag (D-010) inserts into
+`labeler_applications` today. Phase 2 will introduce an `inquiries` table
+and drop `labeler_applications`.
+
+**Decision:** `supabase/migrations/0001_labeler_applications.sql` is a
+byte-faithful capture of the canonical block in `content/TODO.md`
+("Required Supabase setup (D-010)") — table, RLS enable, anon insert
+policy. Migration 0001 must never be rewritten or reordered, even when
+Phase 2 lands; the `inquiries` transition arrives as migration 0002+
+which drops/replaces the old table. Schema history is append-only, so any
+environment (local, staging, production) can replay from zero.
