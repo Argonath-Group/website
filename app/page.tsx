@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {
   aboutCopy,
+  akitaCopy,
   CONTACT_EMAIL,
   homeCopy,
-  workEntries,
-  type HomeLiveWorkItem,
+  projectEntries,
   type WorkEntry,
 } from "@/content/site";
 import { Container } from "@/components/ui/Container";
@@ -15,24 +15,73 @@ import { Reveal } from "@/components/ui/Reveal";
 import { HeroVisual } from "@/components/home/HeroVisual";
 
 /**
- * app/page.tsx — homepage (brief §4.1).
+ * app/page.tsx — homepage (brief §4.1, reframed Argonath-first in D-023).
  *
  * An R&D studio front door, not a product landing page: one interactive
  * hero gesture, then editorial sections in descending order of weight —
- * research focus, the live pair (equal footing), the full work archive,
- * lab and about teasers, a direct contact line.
+ * research focus, the featured-projects block (Akita leading as the
+ * flagship coming-soon project, Labeler deliberately smaller and
+ * linkless), the projects archive, lab and about teasers, a direct
+ * contact line.
  */
 
-/* Enrich the live-work pair with archive metadata (year, kind, status). */
-const liveWork = homeCopy.liveWork.items
-  .map((item) => ({
-    item,
-    entry: workEntries.find((e) => e.slug === item.slug),
-  }))
-  .filter(
-    (x): x is { item: HomeLiveWorkItem; entry: WorkEntry } =>
-      x.entry !== undefined
+/* The featured pair, looked up once from the single-sourced archive. */
+function requireProjectEntry(slug: string): WorkEntry {
+  const entry = projectEntries.find((e) => e.slug === slug);
+  if (!entry) {
+    throw new Error(`content/dictionaries is missing the ${slug} entry`);
+  }
+  return entry;
+}
+const akita = requireProjectEntry("akita");
+const labeler = requireProjectEntry("labeler");
+
+/* Archive rows may be unlinked (Labeler has no page — D-023). */
+function ArchiveRow({
+  entry,
+  index,
+  isLast,
+}: {
+  entry: WorkEntry;
+  index: number;
+  isLast: boolean;
+}) {
+  const inner = (
+    <>
+      <span className="font-mono text-meta text-gray-500 md:col-span-1">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span
+        className={`font-display text-title md:col-span-3 ${
+          entry.href
+            ? "transition-colors group-hover:text-accent"
+            : ""
+        }`}
+      >
+        {entry.name}
+      </span>
+      <span className="max-w-xl text-body text-gray-600 md:col-span-5">
+        {entry.oneLiner}
+      </span>
+      <span className="flex items-center gap-4 md:col-span-3 md:justify-end">
+        <Tag status={entry.status} kind={entry.kind} />
+        <span className="font-mono text-meta text-gray-500">
+          {entry.year}
+        </span>
+      </span>
+    </>
   );
+  const rowClass = `group grid grid-cols-1 gap-3 border-t border-gray-200 py-8 md:grid-cols-12 md:items-baseline md:gap-6 md:py-10 ${
+    isLast ? "border-b" : ""
+  }`;
+  return entry.href ? (
+    <Link href={entry.href} className={rowClass}>
+      {inner}
+    </Link>
+  ) : (
+    <div className={rowClass}>{inner}</div>
+  );
+}
 
 /* Asymmetric offsets for the three research-focus blocks. */
 const FOCUS_LAYOUT = [
@@ -102,50 +151,63 @@ export default function HomePage() {
       </Section>
 
       {/* ---------------------------------------------------------- */}
-      {/* Live work — Akita and Labeler as an equal editorial pair   */}
+      {/* Featured projects — Akita leads (coming soon, waitlist CTA); */}
+      {/* Labeler deliberately smaller: in development, no link, no    */}
+      {/* form (D-023).                                                */}
       {/* ---------------------------------------------------------- */}
-      <Section aria-labelledby="live-work-heading">
+      <Section aria-labelledby="featured-projects-heading">
         <Container>
           <Reveal>
-            <h2 id="live-work-heading" className="font-display text-display-3">
-              {homeCopy.liveWork.heading}
+            <h2
+              id="featured-projects-heading"
+              className="font-display text-display-3"
+            >
+              {homeCopy.featuredProjects.heading}
             </h2>
           </Reveal>
-          <div className="mt-16 grid gap-14 md:mt-20 md:grid-cols-2 md:gap-0 md:divide-x md:divide-gray-200">
-            {liveWork.map(({ item, entry }, i) => (
-              <Reveal
-                key={item.slug}
-                delay={i * 120}
-                className={i === 0 ? "md:pr-14" : "md:pl-14"}
-              >
-                <Tag status={entry.status} kind={entry.kind} />
-                <h3 className="mt-6 font-display text-display-3">
-                  <Link
-                    href={`/work/${item.slug}`}
-                    className="transition-colors hover:text-accent"
-                  >
-                    {item.name}
-                  </Link>
+          <div className="mt-16 grid gap-14 md:mt-20 md:grid-cols-12 md:gap-10">
+            {/* Akita — the lead. */}
+            <Reveal className="md:col-span-7">
+              <Tag status={akita.status} kind={akita.kind} />
+              <h3 className="mt-6 font-display text-display-2">
+                <Link
+                  href={akita.href}
+                  className="transition-colors hover:text-accent"
+                >
+                  {akita.name}
+                </Link>
+              </h3>
+              <p className="mt-5 max-w-lg text-body-lg text-gray-600">
+                {akita.oneLiner}
+              </p>
+              <div className="mt-8">
+                <LinkButton
+                  href={akitaCopy.waitlistCta.href}
+                  variant="primary"
+                >
+                  {akitaCopy.waitlistCta.label}
+                </LinkButton>
+              </div>
+            </Reveal>
+
+            {/* Labeler — quiet, linkless, framed. */}
+            <Reveal delay={120} className="md:col-span-4 md:col-start-9">
+              <div className="border border-gray-200 p-8">
+                <Tag status={labeler.status} kind={labeler.kind} />
+                <h3 className="mt-5 font-display text-title">
+                  {labeler.name}
                 </h3>
-                <p className="mt-4 max-w-md text-body-lg text-gray-600">
-                  {item.oneLiner}
+                <p className="mt-3 text-body text-gray-600">
+                  {labeler.oneLiner}
                 </p>
-                <p className="mt-8 font-mono text-meta uppercase tracking-wide">
-                  <Link
-                    href={`/work/${item.slug}`}
-                    className="text-gray-600 underline-offset-4 transition-colors hover:text-accent hover:underline"
-                  >
-                    View case →
-                  </Link>
-                </p>
-              </Reveal>
-            ))}
+              </div>
+            </Reveal>
           </div>
         </Container>
       </Section>
 
       {/* ---------------------------------------------------------- */}
-      {/* Selected work — the archive: live pair + seeded futures     */}
+      {/* Selected work — the archive: products + seeded futures      */}
       {/* ---------------------------------------------------------- */}
       <Section aria-labelledby="selected-work-heading">
         <Container>
@@ -158,28 +220,9 @@ export default function HomePage() {
             </h2>
           </Reveal>
           <div className="mt-14 md:mt-20">
-            {workEntries.map((entry, i) => (
+            {projectEntries.map((entry, i) => (
               <Reveal key={entry.slug} delay={i * 60}>
-                <Link
-                  href={entry.href}
-                  className="group grid grid-cols-1 gap-3 border-t border-gray-200 py-8 transition-colors last:border-b md:grid-cols-12 md:items-baseline md:gap-6 md:py-10"
-                >
-                  <span className="font-mono text-meta text-gray-500 md:col-span-1">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-display text-title transition-colors group-hover:text-accent md:col-span-3">
-                    {entry.name}
-                  </span>
-                  <span className="max-w-xl text-body text-gray-600 md:col-span-5">
-                    {entry.oneLiner}
-                  </span>
-                  <span className="flex items-center gap-4 md:col-span-3 md:justify-end">
-                    <Tag status={entry.status} kind={entry.kind} />
-                    <span className="font-mono text-meta text-gray-500">
-                      {entry.year}
-                    </span>
-                  </span>
-                </Link>
+                <ArchiveRow entry={entry} index={i} isLast={i === projectEntries.length - 1} />
               </Reveal>
             ))}
           </div>

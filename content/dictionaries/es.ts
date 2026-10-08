@@ -22,7 +22,10 @@ import type {
   LabEntry,
   LabelerCopy,
   LabelerFormCopy,
+  LegalCopy,
   NavItem,
+  PartnersCopy,
+  ProjectsIndexCopy,
   SiteMeta,
   WorkEntry,
 } from "./types";
@@ -42,8 +45,9 @@ const siteMeta: SiteMeta = {
 /* ------------------------------------------------------------------ */
 
 const navItems: NavItem[] = [
-  { label: "WORK", href: "/work" },
+  { label: "PROJECTS", href: "/projects" },
   { label: "LAB", href: "/lab" },
+  { label: "PARTNERS", href: "/partners" },
   { label: "ABOUT", href: "/about" },
   { label: "CONTACT", href: "/contact" },
 ];
@@ -78,23 +82,9 @@ const homeCopy: HomeCopy = {
       },
     ],
   },
-  liveWork: {
+  featuredProjects: {
     // TODO(content): translate
-    heading: "Live work",
-    items: [
-      {
-        slug: "akita",
-        name: "Akita",
-        oneLiner:
-          "Our first product — a sign language learning app that adapts to your country's sign language, starting in Ecuador.",
-      },
-      {
-        slug: "labeler",
-        name: "Labeler",
-        oneLiner:
-          "A marketplace for curated visual datasets, connecting companies across Latin America — starting in Ecuador — with the professionals who annotate them.",
-      },
-    ],
+    heading: "Featured projects",
   },
   selectedWorkHeading: "Selected work",
   labTeaser: {
@@ -118,27 +108,36 @@ const homeCopy: HomeCopy = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Work archive — TODO(content): translate                             */
+/* Projects archive — TODO(content): translate                         */
 /* ------------------------------------------------------------------ */
 
-const workEntries: WorkEntry[] = [
+const projectsIndex: ProjectsIndexCopy = {
+  // TODO(content): translate
+  kicker: "Argonath Group — Projects",
+  heading: "Projects",
+  intro: "Everything we're building — products in development, research, and experiments. Including the unfinished things.",
+};
+
+const projectEntries: WorkEntry[] = [
   {
     slug: "akita",
     name: "Akita",
-    oneLiner: homeCopy.liveWork.items[0].oneLiner,
-    status: "Live",
+    oneLiner:
+      "Our first product — a sign language learning app that adapts to your country's sign language, starting in Ecuador.",
+    status: "In development",
     kind: "Product",
     year: 2024,
-    href: "/work/akita",
+    href: "/projects/akita",
   },
   {
     slug: "labeler",
     name: "Labeler",
-    oneLiner: homeCopy.liveWork.items[1].oneLiner,
-    status: "Live",
+    oneLiner:
+      "A marketplace for curated visual datasets, connecting companies across Latin America — starting in Ecuador — with the professionals who annotate them.",
+    status: "In development",
     kind: "Product",
     year: 2025,
-    href: "/work/labeler",
+    href: "", // no page yet (D-023) — indexes render this entry unlinked
   },
   {
     slug: "signal-field",
@@ -148,7 +147,7 @@ const workEntries: WorkEntry[] = [
     status: "Research",
     kind: "Research",
     year: 2026,
-    href: "/work/signal-field",
+    href: "/projects/signal-field",
   },
   {
     slug: "parallax-loom",
@@ -158,41 +157,92 @@ const workEntries: WorkEntry[] = [
     status: "Experiment",
     kind: "Experiment",
     year: 2026,
-    href: "/work/parallax-loom",
+    href: "/projects/parallax-loom",
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* Work detail: Akita — TODO(content): translate                       */
+/* Akita — coming soon page — TODO(content): translate                 */
 /* ------------------------------------------------------------------ */
 
 const akitaCopy: AkitaCopy = {
   name: "Akita",
-  overview:
-    "Akita is a sign language learning app — the studio's first product, launching in Ecuador and expanding across Latin America. It starts from an insight most learning apps ignore: sign languages are national, not universal. Every country has its own sign language, and most apps pick one and ship it everywhere.",
-  whatItDoes: [
-    "Teaches Ecuadorian Sign Language first, through structured, adaptive lessons.",
-    "Is built to adapt its curriculum and vocabulary to each country's own sign language as it expands across Latin America.",
-    "Accounts for regional variation within Ecuador.",
-  ],
-  perCountryAdaptivity:
-    "Sign languages are national, not universal — Ecuador's sign language and those of its neighbors are distinct languages, as different from each other as spoken ones. Akita launches with Ecuadorian Sign Language and treats the learner's country as the first design input: curriculum sequence, vocabulary, and regional variation all follow the national sign language, with expansion across Latin America planned.",
-  capabilities: [
-    "Ecuadorian Sign Language curriculum",
-    "Per-country curriculum adaptation as we expand",
-    "Regional variation support",
-    "Adaptive pacing and review",
-  ],
-  demo: {
-    heading: "Try Akita",
-    body: "Akita is in development in Ecuador. A public demo is coming.",
-    ctaLabel: "Try Akita",
-    ctaHref: "#",
+  insight: {
+    // TODO(content): translate
+    heading: "The insight",
+    body: "Sign languages are national, not universal — Ecuador's sign language and those of its neighbors are distinct languages, as different from each other as spoken ones. Akita starts from Ecuadorian Sign Language and treats the learner's country as the first design input: curriculum, vocabulary, and regional variation all follow the national sign language, with expansion across Latin America planned.",
   },
-  documentation: {
-    heading: "Documentation",
-    body: "Technical notes on the adaptive curriculum and the per-country content model.",
-    ctaHref: "#",
+  features: {
+    // TODO(content): translate
+    heading: "Features",
+    items: [
+      "Ecuadorian Sign Language curriculum",
+      "Per-country curriculum adaptation as we expand",
+      "Regional variation support",
+      "Adaptive pacing and review",
+    ],
+  },
+  waitlistCta: {
+    label: "Join the waitlist",
+    href: mailto("Akita waitlist"),
+  },
+  partnerCta: {
+    label: "Partner with us",
+    href: mailto("Akita partnership"),
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* Partners page — TODO(content): translate                            */
+/* ------------------------------------------------------------------ */
+
+const partnersCopy: PartnersCopy = {
+  // TODO(content): translate
+  heading: "Partners",
+  intro: "We take on a small number of collaborations and research partnerships each year. If your institution or company works on what we research, we would like to hear from you.",
+  why: {
+    heading: "Why partner with the studio",
+    body: "Argonath Group is an independent R&D studio working across visual technology, computational design, and experimental digital experiences. Partnerships let us take on problems that need sustained research and take them further than a single product cycle allows.",
+  },
+  who: {
+    heading: "Who we'd like to hear from",
+    intro: "We are open to conversations with:",
+    groups: [
+      "Research partners — universities and labs working on sign language, visual languages, or adaptive systems.",
+      "Accessibility programs — organizations expanding access to sign language and visual communication.",
+      "Schools and educators — institutions that could put Akita in front of learners.",
+      "Companies with visual-data needs — teams that need curated, annotated visual data.",
+    ],
+  },
+  offer: {
+    heading: "What the studio brings",
+    items: [
+      "R&D — research across visual technology and computational design.",
+      "Visual technology — systems for seeing, representing, and interacting.",
+      "Adaptive systems — software that reshapes itself around the person using it.",
+    ],
+  },
+  cta: {
+    label: "Start a partnership conversation",
+    href: mailto("Partnership inquiry"),
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* Legal shells — TODO(content): translate                             */
+/* ------------------------------------------------------------------ */
+
+const legalCopy: LegalCopy = {
+  // TODO(content): translate
+  privacy: {
+    heading: "Privacy",
+    status: "This page is being finalized.",
+    body: "The Argonath Group privacy policy will be published here before launch. Until then, we keep this page honest rather than inventing text we are not ready to stand behind. For any question about your data, write to us directly.",
+  },
+  terms: {
+    heading: "Terms",
+    status: "This page is being finalized.",
+    body: "The Argonath Group terms of service will be published here before launch. Until then, we keep this page honest rather than inventing text we are not ready to stand behind. For any question, write to us directly.",
   },
 };
 
@@ -358,9 +408,12 @@ export const esDictionary: Dictionary = {
   siteMeta,
   navItems,
   homeCopy,
-  workEntries,
+  projectEntries,
+  projectsIndex,
   akitaCopy,
   labelerCopy,
+  partnersCopy,
+  legalCopy,
   labIdentityLine,
   labEntries,
   aboutCopy,

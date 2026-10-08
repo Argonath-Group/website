@@ -3,12 +3,13 @@ import type { WorkKind, WorkStatus } from "@/content/site";
 /**
  * Tag — status/kind label derived from the WorkStatus type (D-006 data).
  *
- *   Live        → accent signal (it's the thing you can touch)
- *   Research    → ink outline (deliberate, in-progress)
- *   Experiment  → dashed gray (tentative, lab register)
+ *   Live           → accent fill (it's the thing you can touch)
+ *   In development → accent outline (real, announced, not shipped — D-023)
+ *   Research       → ink outline (deliberate, in-progress)
+ *   Experiment     → dashed gray (tentative, lab register)
  *
  * `kind` (Product/Research/Experiment) is prepended when it differs from
- * the status, producing labels like "Product · Live" for shipped work.
+ * the status, producing labels like "Product · In development".
  */
 const VARIANTS: Record<
   WorkStatus,
@@ -19,6 +20,11 @@ const VARIANTS: Record<
     // kind ("Product"/"Research"/"Experiment") never equals "Live", so
     // when kind is present it is always prepended: "Product · Live".
     label: (kind) => (kind ? `${kind} · Live` : "Live"),
+  },
+  "In development": {
+    tag: "border-accent text-accent",
+    label: (kind) =>
+      kind ? `${kind} · In development` : "In development",
   },
   Research: {
     tag: "border-ink text-ink",

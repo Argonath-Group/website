@@ -4,24 +4,25 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Tag";
 import { Reveal } from "@/components/ui/Reveal";
-import { workEntries } from "@/content/site";
+import { projectEntries, projectsIndex } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "Work",
-  description:
-    "The Argonath Group lab archive — everything we've built, including unfinished things.",
+  title: projectsIndex.heading,
+  description: projectsIndex.intro,
 };
 
 /**
- * /work — LAB ARCHIVE, not a SaaS grid (brief §4.2).
+ * /projects — the studio's project archive (D-023), not a SaaS grid.
  *
- * An editorial index of things made: numbered archive rows with a
- * table rhythm (hairline rules, mono metadata, one large typographic
- * gesture per row), generous negative space, and status Tags that
- * distinguish live products from research and experiments. Explicitly
- * NOT uniform product cards.
+ * Same editorial bones as the former /work index: numbered archive rows
+ * with a table rhythm (hairline rules, mono metadata, one large
+ * typographic gesture per row). Reframed Argonath-first: Akita leads as
+ * the flagship coming-soon project, Labeler sits in the index as an
+ * in-development entry with NO page (href "" renders the row unlinked),
+ * the seeded research/experiment entries keep their detail pages under
+ * /projects/[slug].
  */
-export default function WorkPage() {
+export default function ProjectsPage() {
   return (
     <main>
       {/* Archive header — asymmetric: oversized display type on the left,
@@ -32,16 +33,17 @@ export default function WorkPage() {
             <div className="md:col-span-7">
               <Reveal>
                 <p className="mb-6 font-mono text-meta uppercase tracking-wide text-gray-500">
-                  Argonath Group — Lab archive
+                  {projectsIndex.kicker}
                 </p>
-                <h1 className="font-display text-display-1">Work</h1>
+                <h1 className="font-display text-display-1">
+                  {projectsIndex.heading}
+                </h1>
               </Reveal>
             </div>
             <div className="flex items-end md:col-span-4 md:col-start-9">
               <Reveal delay={120}>
                 <p className="text-body-lg text-gray-600">
-                  Everything we&apos;ve built — products, research, and
-                  experiments. Including the unfinished things.
+                  {projectsIndex.intro}
                 </p>
               </Reveal>
             </div>
@@ -51,7 +53,8 @@ export default function WorkPage() {
 
       {/* The index — archive-table rhythm: a heavy top rule, mono column
           labels, hairline row separators. Each row is one entry, not a
-          card. */}
+          card. Entries with an empty href (Labeler, D-023) render as
+          unlinked rows. */}
       <Section className="pt-0">
         <Container>
           <div className="border-t-2 border-ink">
@@ -66,17 +69,20 @@ export default function WorkPage() {
               <span className="col-span-4 text-right md:col-span-2">Year</span>
             </div>
 
-            {workEntries.map((entry, i) => (
-              <Reveal key={entry.slug} delay={i * 70}>
-                <Link
-                  href={entry.href}
-                  className="group -mx-4 grid grid-cols-12 items-baseline gap-4 border-b border-gray-300 px-4 py-10 transition-colors duration-200 hover:bg-gray-100 md:-mx-6 md:px-6 md:py-14"
-                >
+            {projectEntries.map((entry, i) => {
+              const inner = (
+                <>
                   <span className="col-span-2 font-mono text-meta text-gray-500 md:col-span-1">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="col-span-10 md:col-span-6">
-                    <span className="block font-display text-display-3 tracking-[-0.02em] transition-colors duration-200 group-hover:text-accent">
+                    <span
+                      className={`block font-display text-display-3 tracking-[-0.02em] ${
+                        entry.href
+                          ? "transition-colors duration-200 group-hover:text-accent"
+                          : ""
+                      }`}
+                    >
                       {entry.name}
                     </span>
                     <span className="mt-3 block max-w-md text-body text-gray-600">
@@ -93,20 +99,40 @@ export default function WorkPage() {
                     {entry.year}
                     <span
                       aria-hidden
-                      className="text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-accent"
+                      className={`text-gray-400 transition-all duration-200 ${
+                        entry.href
+                          ? "group-hover:translate-x-1 group-hover:text-accent"
+                          : ""
+                      }`}
                     >
                       →
                     </span>
                   </span>
-                </Link>
-              </Reveal>
-            ))}
+                </>
+              );
+              const rowClass =
+                "group -mx-4 grid grid-cols-12 items-baseline gap-4 border-b border-gray-300 px-4 py-10 md:-mx-6 md:px-6 md:py-14";
+              return (
+                <Reveal key={entry.slug} delay={i * 70}>
+                  {entry.href ? (
+                    <Link
+                      href={entry.href}
+                      className={`${rowClass} transition-colors duration-200 hover:bg-gray-100`}
+                    >
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div className={rowClass}>{inner}</div>
+                  )}
+                </Reveal>
+              );
+            })}
           </div>
 
           {/* Index footnote — the archive is open-ended. */}
-          <Reveal delay={workEntries.length * 70}>
+          <Reveal delay={projectEntries.length * 70}>
             <p className="mt-10 font-mono text-meta uppercase tracking-wide text-gray-500">
-              {workEntries.length} entries — index open
+              {projectEntries.length} entries — index open
             </p>
           </Reveal>
         </Container>

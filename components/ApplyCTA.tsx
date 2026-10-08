@@ -6,6 +6,12 @@ import { ApplyForm } from "@/components/apply/ApplyForm";
 /**
  * ApplyCTA — THE feature-flagged application CTA for Labeler (D-007).
  *
+ * @deprecated Phase 1b (D-023): the Labeler page has been removed from the
+ * site IA, so this component currently has NO callers. It is intentionally
+ * NOT deleted — Phase 2 generalizes it (with `ApplyForm` and `/api/apply`)
+ * into the studio intake form behind the same Supabase flag. Keep the
+ * `type` prop contract and `data-apply-slot` attributes stable until then.
+ *
  * Contract for the Labeler page agent and the Supabase-form agent (5b):
  *
  *   <ApplyCTA type="company" />
