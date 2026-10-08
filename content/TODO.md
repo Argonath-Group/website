@@ -72,11 +72,10 @@ invent facts — replace stubs only with confirmed copy from the studio.
   failure copy, error messages) is a provisional first draft; confirm
   final copy. The es.ts mirror is English-untranslated pending the
   Spanish pass.
-- Resend domain verification (D-028) — `RESEND_FROM` defaults to
-  `notifications@argonathgroup.com`, which only sends once the domain is
-  verified in Resend; until then notification emails fail silently
-  (non-fatal, the inquiry is still stored). Confirm the sender address
-  and verify the domain before relying on email notifications.
+- ~~Resend domain verification (D-028)~~ — **RESOLVED 2026-10-08.** Domain
+  verified in Resend; `RESEND_API_KEY` + `RESEND_FROM` set in Vercel
+  Production and validated end-to-end (notification + confirmation emails
+  both received on a live test inquiry).
 
 ## Required Supabase setup (D-010)
 
