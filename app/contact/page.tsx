@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CONTACT_EMAIL, contactCopy } from "@/content/site";
+import { isSupabaseEnabled } from "@/lib/supabase";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Prose } from "@/components/ui/Prose";
+import { InquireForm } from "@/components/inquire/InquireForm";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -54,23 +56,33 @@ export default function ContactPage() {
             </div>
           </Reveal>
 
-          {/* Stage-1 spec: email only, no form. The mailto IS the page. */}
-          <Reveal delay={240}>
-            <div className="mt-16 border-y border-gray-200 py-10 md:py-14">
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="group inline-block break-all font-display text-display-3 text-accent underline decoration-gray-300 underline-offset-8 transition-colors duration-200 hover:decoration-accent"
-              >
-                {CONTACT_EMAIL}
-                <span
-                  aria-hidden="true"
-                  className="ml-3 inline-block transition-transform duration-200 group-hover:translate-x-1"
+          {/* The mailto IS the page when the intake flag is off (the
+              default production state). When Supabase is enabled, the
+              intent-based form hosts the conversation instead. */}
+          {isSupabaseEnabled() ? (
+            <Reveal delay={240}>
+              <div className="mt-16 max-w-2xl border-t-2 border-ink pt-10">
+                <InquireForm />
+              </div>
+            </Reveal>
+          ) : (
+            <Reveal delay={240}>
+              <div className="mt-16 border-y border-gray-200 py-10 md:py-14">
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="group inline-block break-all font-display text-display-3 text-accent underline decoration-gray-300 underline-offset-8 transition-colors duration-200 hover:decoration-accent"
                 >
-                  &rarr;
-                </span>
-              </a>
-            </div>
-          </Reveal>
+                  {CONTACT_EMAIL}
+                  <span
+                    aria-hidden="true"
+                    className="ml-3 inline-block transition-transform duration-200 group-hover:translate-x-1"
+                  >
+                    &rarr;
+                  </span>
+                </a>
+              </div>
+            </Reveal>
+          )}
 
           <Reveal delay={320}>
             <dl className="mt-4 border-b border-gray-200">

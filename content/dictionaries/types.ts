@@ -276,6 +276,103 @@ export interface LabelerFormCopy {
 }
 
 /* ------------------------------------------------------------------ */
+/* Inquiries intake (D-026 — supersedes the Labeler-only form)         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Every intake intent the API accepts. The five `WebsiteIntent` values
+ * are selectable on the website form; `labeler_*` exists for the
+ * (currently unlinked) Labeler flow and future subdomains — it can be
+ * rendered by InquireCTA with the intent locked, but never appears in
+ * the public dropdown. Must stay in sync with the
+ * `inquiries.intent` CHECK constraint in migration 0002.
+ */
+export const inquiryIntents = [
+  "akita_waitlist",
+  "akita_partnership",
+  "project_collaboration",
+  "press",
+  "general",
+  "labeler_company",
+  "labeler_professional",
+] as const;
+export type Intent = (typeof inquiryIntents)[number];
+
+/** Intents selectable in the website contact-form dropdown. */
+export const websiteIntents = [
+  "akita_waitlist",
+  "akita_partnership",
+  "project_collaboration",
+  "press",
+  "general",
+] as const;
+export type WebsiteIntent = (typeof websiteIntents)[number];
+
+/** Conditional akita_partnership payload field. */
+export const partnershipTypes = [
+  "research",
+  "distribution",
+  "accessibility-program",
+  "other",
+] as const;
+export type PartnershipType = (typeof partnershipTypes)[number];
+
+/** Whitelisted request sources (migration 0002 CHECK constraint). */
+export const inquirySources = ["website", "akita-app", "labeler-app"] as const;
+export type InquirySource = (typeof inquirySources)[number];
+
+export interface InquiryFormCopy {
+  labels: {
+    intent: string;
+    name: string;
+    email: string;
+    org: string;
+    message: string;
+    partnershipType: string;
+    links: string;
+    timeline: string;
+    consent: string;
+  };
+  placeholders: {
+    name: string;
+    email: string;
+    org: string;
+    message: string;
+    links: string;
+    timeline: string;
+  };
+  /** Intent chip shown when the form renders with a locked intent. */
+  lockedIntentLabel: string;
+  intentOptions: Record<WebsiteIntent, string>;
+  partnershipTypeOptions: Record<PartnershipType, string>;
+  submitLabel: string;
+  submittingLabel: string;
+  success: {
+    heading: string;
+    body: string;
+  };
+  failure: {
+    heading: string;
+    body: string;
+    fallbackLabel: string;
+  };
+  privacy: {
+    /** One-line note; rendered next to the consent checkbox. */
+    note: string;
+    linkLabel: string;
+  };
+  errors: {
+    required: string;
+    invalidEmail: string;
+    invalidUrl: string;
+    consentRequired: string;
+    invalidIntent: string;
+  };
+  /** Decoy honeypot label (visually hidden from humans). */
+  honeypotLabel: string;
+}
+
+/* ------------------------------------------------------------------ */
 /* Aggregate — what getDictionary(locale) returns                      */
 /* ------------------------------------------------------------------ */
 
@@ -294,4 +391,5 @@ export interface Dictionary {
   aboutCopy: AboutCopy;
   contactCopy: ContactCopy;
   labelerFormCopy: LabelerFormCopy;
+  inquiryFormCopy: InquiryFormCopy;
 }

@@ -19,6 +19,7 @@ import type {
   ContactCopy,
   Dictionary,
   HomeCopy,
+  InquiryFormCopy,
   LabEntry,
   LabelerCopy,
   LabelerFormCopy,
@@ -396,8 +397,73 @@ const labelerFormCopy: LabelerFormCopy = {
     body: "The form could not send your application. You can always reach us directly:",
     fallbackLabel: "Email us instead",
   },
-  fieldErrorRequired: "Required field:",
-  invalidEmail: "Enter a valid email address.",
+  fieldErrorRequired: "Required field:", // TODO(content): translate
+  invalidEmail: "Enter a valid email address.", // TODO(content): translate
+};
+
+/* ------------------------------------------------------------------ */
+/* Inquiries intake form (D-026/D-027) — TODO(content): translate      */
+/* ------------------------------------------------------------------ */
+
+const inquiryFormCopy: InquiryFormCopy = {
+  // TODO(content): translate — values are English placeholders until the
+  // Spanish pass; keys MUST stay identical to en.ts (compile-time parity).
+  labels: {
+    intent: "What is this about?",
+    name: "Name",
+    email: "Email",
+    org: "Organization",
+    message: "Message",
+    partnershipType: "Partnership type",
+    links: "Links",
+    timeline: "Timeline",
+    consent: "Consent",
+  },
+  placeholders: {
+    name: "Your full name",
+    email: "you@example.com",
+    org: "Company, institution, or publication",
+    message: "Tell us what you have in mind.",
+    links: "https://…",
+    timeline: "When are you hoping to start?",
+  },
+  lockedIntentLabel: "Topic",
+  intentOptions: {
+    akita_waitlist: "Join the Akita waitlist",
+    akita_partnership: "Partner with us on Akita",
+    project_collaboration: "Project collaboration",
+    press: "Press",
+    general: "General",
+  },
+  partnershipTypeOptions: {
+    research: "Research",
+    distribution: "Distribution",
+    "accessibility-program": "Accessibility program",
+    other: "Other", // TODO(content)
+  },
+  submitLabel: "Send inquiry",
+  submittingLabel: "Sending…",
+  success: {
+    heading: "Inquiry received",
+    body: "Thank you — we read every message personally and will reply from our own inbox.",
+  },
+  failure: {
+    heading: "Something went wrong",
+    body: "The form could not send your inquiry. You can always reach us directly:",
+    fallbackLabel: "Email us instead",
+  },
+  privacy: {
+    note: "We use what you send only to reply to you. Details:",
+    linkLabel: "Privacy",
+  },
+  errors: {
+    required: "This field is required.",
+    invalidEmail: "Enter a valid email address.",
+    invalidUrl: "Enter a valid URL.",
+    consentRequired: "Please accept before sending.",
+    invalidIntent: "Choose a topic.",
+  },
+  honeypotLabel: "Website (leave this field empty)",
 };
 
 /* ------------------------------------------------------------------ */
@@ -419,4 +485,5 @@ export const esDictionary: Dictionary = {
   aboutCopy,
   contactCopy,
   labelerFormCopy,
+  inquiryFormCopy,
 };

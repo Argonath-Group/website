@@ -67,8 +67,25 @@ invent facts — replace stubs only with confirmed copy from the studio.
   ASL or European sign-language coverage claimed. The expansion framing
   in `akitaCopy.insight` and the regional phrasing in `labelerCopy`
   still need final confirmation from the studio.
+- `inquiryFormCopy` (D-026/D-027) — every intake-form string (labels,
+  placeholders, intent/option labels, consent + privacy note, success/
+  failure copy, error messages) is a provisional first draft; confirm
+  final copy. The es.ts mirror is English-untranslated pending the
+  Spanish pass.
+- Resend domain verification (D-028) — `RESEND_FROM` defaults to
+  `notifications@argonathgroup.com`, which only sends once the domain is
+  verified in Resend; until then notification emails fail silently
+  (non-fatal, the inquiry is still stored). Confirm the sender address
+  and verify the domain before relying on email notifications.
 
 ## Required Supabase setup (D-010)
+
+> **Superseded by migration 0002 (D-026).** The block below is the
+> historical spec for migration 0001 (`labeler_applications`), which is
+> preserved for history. The live intake schema is now
+> `supabase/migrations/0002_inquiries.sql`, applied automatically by the
+> migrations workflow on merge to main (D-018/D-019). Nothing here needs
+> manual dashboard work anymore.
 
 The `/api/apply` route inserts into `labeler_applications` using the
 **anon** key. Before enabling Supabase (`NEXT_PUBLIC_SUPABASE_URL` +

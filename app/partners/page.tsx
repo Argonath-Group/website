@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { LinkButton } from "@/components/ui/Button";
+import { InquireCTA } from "@/components/inquire/InquireCTA";
 import { partnersCopy } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -131,14 +131,17 @@ export default function PartnersPage() {
         </Container>
       </Section>
 
-      {/* CTA — one direct line. */}
+      {/* CTA — one direct line; mailto while the flag is off, locked-intent
+          form when Supabase is enabled (D-027). */}
       <Section aria-labelledby="partners-cta">
         <Container>
           <Reveal>
             <div className="border-t-2 border-ink pt-10">
-              <LinkButton href={partnersCopy.cta.href} variant="primary">
-                {partnersCopy.cta.label}
-              </LinkButton>
+              <InquireCTA
+                intent="project_collaboration"
+                label={partnersCopy.cta.label}
+                variant="primary"
+              />
             </div>
           </Reveal>
         </Container>

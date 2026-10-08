@@ -490,3 +490,64 @@ to drift from the English key set.
   duplicated.
 - Pages are NOT refactored in this phase: they keep importing from the
   barrel; the provider/context exists for future client components.
+
+## D-026 — Inquiries schema: consent-gated anon insert; 0001 preserved
+
+**Context:** The Labeler-only `labeler_applications` intake (D-010) needed
+to become a general studio intake (Akita waitlist, Akita partnership,
+partners, press, general) with conditional per-intent fields.
+
+**Decision:** New migration `supabase/migrations/0002_inquiries.sql`
+creates `inquiries` (uuid PK, intent CHECK enum, name/email/org/message,
+`payload jsonb` for conditional fields, status workflow, consent flag,
+privacy-safe `ip_hash`, truncated `user_agent`, source CHECK whitelist),
+with indexes on (status), (intent), (created_at desc). RLS: anon INSERT
+policy requires `consent = true AND status = 'new'`; anon has NO
+select/update/delete — reads happen out-of-band (dashboard / service
+key). Per D-020, migration 0001 is untouched: `labeler_applications`
+stays for history and a later migration may drop it. The raw client IP is
+NEVER stored — only a sha256 salted with the anon key (constant-pepper
+fallback) so it can detect duplicate bursts without being a tracking
+vector.
+
+## D-027 — InquireCTA/InquireForm contract; ApplyCTA removed
+
+**Context:** D-007's ApplyCTA (Labeler-only `type: "company" |
+"professional"`) was the placeholder for this generalization, but D-023
+removed the Labeler page from the IA, leaving it with zero callers.
+
+**Decision:** `components/ApplyCTA.tsx`, `components/apply/`, and
+`app/api/apply/` are deleted (the old path 404s naturally — no external
+consumers). Replacement contract:
+
+```ts
+interface InquireCTAProps { intent: Intent; label: string; variant?: "primary" | "secondary" }
+```
+
+Server component, flag read at request time: OFF → mailto `LinkButton`
+(CONTACT_EMAIL, subject from `mailtoSubjects[intent]`, D-012
+space-encoding, `cta_click` tracked in the client button). ON →
+`InquireForm` with the intent LOCKED (chip, no dropdown) inside
+`data-inquire-slot` / `data-inquire-intent`. The contact page hosts
+`<InquireForm />` unlocked (dropdown of the five website intents;
+`labeler_*` intents exist in the API enum for future subdomains but
+never appear in the public dropdown). Removal over deprecation: zero
+callers remained, so carrying both contracts would fork the API for no
+consumers.
+
+## D-028 — Resend notifications: flag-gated, strictly failure-isolated
+
+**Context:** The studio wants an email ping on each inquiry plus an
+applicant confirmation, without building mail infrastructure.
+
+**Decision:** `resend` added as a dependency, used ONLY in
+`app/api/inquire/route.ts`, ONLY after a successful insert, inside its
+own try/catch that can never fail the request (errors are logged; the
+inquiry is already stored). If `RESEND_API_KEY` is unset it skips
+silently (console.info) — same flag-gated philosophy as the Supabase
+layer. `RESEND_FROM` defaults to `notifications@argonathgroup.com`; if
+that domain isn't verified in Resend the send fails gracefully (state C
+already treats every downstream failure as non-fatal). Both vars are
+server-only — never `NEXT_PUBLIC_`. The module is dynamically imported
+so the flag-off request path never loads it. Confirmation copy comes
+from the dictionary, keeping email text in the content layer.
