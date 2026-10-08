@@ -346,3 +346,66 @@ policy. Migration 0001 must never be rewritten or reordered, even when
 Phase 2 lands; the `inquiries` transition arrives as migration 0002+
 which drops/replaces the old table. Schema history is append-only, so any
 environment (local, staging, production) can replay from zero.
+
+## D-021 — Cookie-only i18n: one URL, two locales, zero redirects
+
+**Context:** The studio needs English (default) + Spanish without URL
+changes (`/es/...` prefixes were ruled out: they split link equity,
+double the route surface, and complicate the lab/work slugs).
+
+**Decision:** Hand-rolled, cookie-only i18n — no next-intl, no i18n
+library, no middleware rewrites:
+
+- **Selection**: a persistent `locale` cookie (`en` default, `es` via a
+  nav EN/ES toggle that POSTs to `/api/locale` and `router.refresh()`es).
+  The same URL serves both locales; there is NEVER a redirect or rewrite.
+- **First-visit detection** (`detectLocale`, a pure function in
+  `lib/locale.ts`): `es` if `Accept-Language` starts with `es`; if the
+  header is absent/ambiguous (`""` or `*`), `x-vercel-ip-country` (Vercel
+  header) in the LatAm set `["EC","MX","CO","AR","PE","CL","VE","BO","PY",
+  "UY","CR","PA","NI","GT","HN","SV","DO","CU","PR"]` (EC first — home
+  market) decides; otherwise `en`. Country alone never overrides an
+  explicit non-Spanish language preference. Middleware sets the cookie
+  (1 year, SameSite=Lax) and passes the response through — no redirect.
+- **Rendering**: the root layout resolves the locale per request
+  (`cookies()`), sets `<html lang>`, and provides the dictionary via
+  context (`DictionaryProvider`). NOTE: the provider is a CLIENT
+  component — server components cannot render React context providers
+  in the App Router ("Element type is invalid"); the server passes the
+  resolved dictionary as a prop and server-built children flow through
+  the client provider unchanged.
+
+**Accepted tradeoffs (recorded):**
+- **SEO**: no per-language URLs → no hreflang, no per-language indexing.
+  Accepted — the studio's discovery surface is not SEO-driven today.
+- **Static prerendering**: reading the cookie in the root layout makes
+  page routes dynamic server-rendered. Accepted — Vercel free tier
+  handles it, and it is inherent to serving two locales from one URL
+  without client-side copy swapping.
+
+**Rationale for hand-rolled**: App-Router-native (cookies + middleware +
+server components), zero new dependencies, no middleware rewrite
+complexity, and the pure detection core is unit-testable in isolation.
+
+## D-022 — Dictionaries: en.ts/es.ts with compile-time key parity
+
+**Context:** Splitting `content/site.ts` into per-locale dictionaries
+must not break the ~20 existing consumers, and Spanish must not be able
+to drift from the English key set.
+
+**Decision:**
+- `content/dictionaries/types.ts` holds every content interface plus the
+  aggregate `Dictionary` shape; `en.ts` and `es.ts` both implement it,
+  so a missing or mistyped key in EITHER language is a compile error.
+- `content/site.ts` is now a **barrel**: it re-exports the English
+  consts (identical names/shapes — zero consumer changes), the types,
+  `locales`/`Locale`, `getDictionary(locale)`, and `CONTACT_EMAIL`.
+- `es.ts` ships as a typed stub with values **identical to English**,
+  section-marked `// TODO(content): translate`. Translating later =
+  editing `es.ts` only, one section at a time, with the type system as
+  the safety net.
+- `CONTACT_EMAIL` and the mailto contract live in
+  `dictionaries/shared.ts` — single-sourced, locale-independent, never
+  duplicated.
+- Pages are NOT refactored in this phase: they keep importing from the
+  barrel; the provider/context exists for future client components.

@@ -77,3 +77,14 @@ Notes:
   dashboard or a service key out-of-band.
 - If this setup is missing, the form degrades to its failure state with
   the mailto fallback (state C in DECISIONS.md), so nothing breaks visibly.
+
+## i18n (D-021/D-022)
+
+- `content/dictionaries/es.ts` — the ENTIRE Spanish dictionary is a
+  stub identical to the English values. Every section needs human
+  translation once the English copy is final (markers:
+  `TODO(content): translate`). Do not machine-translate product names
+  (Akita, Labeler) or the nav labels without studio sign-off.
+- Phase 1b+ — wire `getDictionary(locale)` into the page tree so the
+  cookie actually switches rendered copy (today only `<html lang>` and
+  the cookie change; pages still render the English barrel consts).

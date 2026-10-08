@@ -3,21 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { navItems, siteMeta } from "@/content/site";
+import { navItems, siteMeta, type Locale } from "@/content/site";
+import { LocaleToggle } from "./LocaleToggle";
 
 /**
  * Nav — site header: wordmark + WORK · LAB · ABOUT · CONTACT.
  *
- * Desktop: inline mono links with aria-current on the active route.
- * Mobile (≤md): a disclosure button (aria-expanded/aria-controls) opens a
- * full-screen paper panel. Keyboard contract:
+ * Desktop: inline mono links with aria-current on the active route,
+ * plus the EN/ES locale toggle (D-021). Mobile (≤md): a disclosure
+ * button (aria-expanded/aria-controls) opens a full-screen paper panel.
+ * Keyboard contract:
  *  - Escape closes the menu and returns focus to the trigger
  *  - focus moves into the panel on open, is contained (Tab cycles), and
  *    returns to the trigger on close
  *  - route change closes the menu
  *  - body scroll is locked while the menu is open
  */
-export function Nav() {
+export function Nav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -91,26 +93,29 @@ export function Nav() {
         </Link>
 
         {/* Desktop */}
-        <ul className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => {
-            const active =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href));
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`font-mono text-meta uppercase tracking-wide transition-colors ${
-                    active ? "text-accent" : "text-gray-600 hover:text-ink"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="hidden items-center gap-8 md:flex">
+          <ul className="flex items-center gap-8">
+            {navItems.map((item) => {
+              const active =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`font-mono text-meta uppercase tracking-wide transition-colors ${
+                      active ? "text-accent" : "text-gray-600 hover:text-ink"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <LocaleToggle locale={locale} />
+        </div>
 
         {/* Mobile trigger */}
         <button
@@ -158,6 +163,12 @@ export function Nav() {
               );
             })}
           </ul>
+
+          {/* Locale toggle inside the panel so it is covered by the
+              focus trap and Escape/close behavior. */}
+          <div className="px-6 pb-10">
+            <LocaleToggle locale={locale} />
+          </div>
         </div>
       )}
     </header>
