@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { siteMeta } from "@/content/site";
+import { getDictionary, siteMeta } from "@/content/site";
 import { SITE_URL } from "@/lib/site-url";
+import { getLocale } from "@/lib/locale";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { DictionaryProvider } from "@/components/locale/DictionaryProvider";
 import "./globals.css";
 
 /**
@@ -44,13 +46,21 @@ export const metadata: Metadata = {
   description: siteMeta.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // D-021: cookie-only i18n — resolve the locale per request (this is
+  // what makes page routes dynamic; the accepted consequence of serving
+  // two locales from one URL with no redirect). The dictionary is
+  // provided via context for future client components; pages still
+  // import copy from the barrel until Phase 1b wires them up.
+  const locale = await getLocale();
+  const dictionary = getDictionary(locale);
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${display.variable} ${sans.variable} ${mono.variable} flex min-h-screen flex-col`}
       >
@@ -62,12 +72,14 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        <Nav />
+        <Nav locale={locale} />
 
         {/* Pages own their <main> landmark; the shell provides the
             skip target and the flex column that pins the footer low. */}
         <div id="content" className="flex-1">
-          {children}
+          <DictionaryProvider dictionary={dictionary}>
+            {children}
+          </DictionaryProvider>
         </div>
 
         <Footer />
