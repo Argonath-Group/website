@@ -1,0 +1,9 @@
+-- Seed data for local development only.
+-- `supabase db reset` applies migrations then this file.
+--
+-- The site is designed to run with NO database, so nothing here is
+-- required. Kept as a hook for local testing of the /api/apply form
+-- (state B): uncomment to have a row to inspect after a test submit.
+--
+-- insert into public.labeler_applications (type, name, email, message)
+-- values ('company', 'Seed Company', 'seed@example.com', 'Local seed row.');

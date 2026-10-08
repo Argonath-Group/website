@@ -25,3 +25,9 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# supabase local state (never commit link state or keys)
+supabase/.branches
+supabase/.temp
+supabase/.env
+supabase/.env.*

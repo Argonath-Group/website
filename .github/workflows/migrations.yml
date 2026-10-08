@@ -1,0 +1,41 @@
+# Migrations — applies supabase/migrations to the linked project on merge
+# to main. GitHub (this repo) is the source of truth for schema; the
+# dashboard must never be edited by hand (D-018).
+#
+# Required repository secrets:
+#   SUPABASE_ACCESS_TOKEN  — personal access token (supabase.com/dashboard/account/tokens)
+#   SUPABASE_PROJECT_REF   — project reference ID (Project Settings → General)
+
+name: migrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/**"
+      - ".github/workflows/migrations.yml"
+
+jobs:
+  push-migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+
+      - name: Link project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
+
+      - name: Migration status (dry-run visibility)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase migration list
+
+      - name: Push migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase db push
