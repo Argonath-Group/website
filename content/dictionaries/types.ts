@@ -23,7 +23,12 @@ export interface SiteMeta {
   description: string;
 }
 
-export type NavItemLabel = "WORK" | "LAB" | "ABOUT" | "CONTACT";
+export type NavItemLabel =
+  | "PROJECTS"
+  | "LAB"
+  | "PARTNERS"
+  | "ABOUT"
+  | "CONTACT";
 
 export interface NavItem {
   label: NavItemLabel;
@@ -39,12 +44,6 @@ export interface HomeFocusBlock {
   description: string;
 }
 
-export interface HomeLiveWorkItem {
-  slug: "akita" | "labeler";
-  name: string;
-  oneLiner: string;
-}
-
 export interface HomeCopy {
   hero: {
     headline: string;
@@ -54,9 +53,14 @@ export interface HomeCopy {
     heading: string; // TODO(content)
     blocks: HomeFocusBlock[];
   };
-  liveWork: {
-    heading: string; // TODO(content)
-    items: HomeLiveWorkItem[];
+  /**
+   * Featured projects block (D-023): Akita leads with coming-soon framing,
+   * Labeler sits smaller as an in-development card with no link. Names,
+   * one-liners, and the waitlist CTA are single-sourced from
+   * `projectEntries` / `akitaCopy`; only the block heading lives here.
+   */
+  featuredProjects: {
+    heading: string;
   };
   /** Heading for the selected-work archive block on Home. */
   selectedWorkHeading: string;
@@ -78,10 +82,15 @@ export interface HomeCopy {
 }
 
 /* ------------------------------------------------------------------ */
-/* Work archive                                                        */
+/* Projects archive (D-023 — formerly "work")                          */
 /* ------------------------------------------------------------------ */
 
-export type WorkStatus = "Live" | "Research" | "Experiment";
+/**
+ * Status drives the Tag variant. "Live" stays in the union for cheap
+ * stability but nothing ships as Live today: the two products are
+ * "In development" (D-023), the seeded futures are Research/Experiment.
+ */
+export type WorkStatus = "Live" | "In development" | "Research" | "Experiment";
 export type WorkKind = "Product" | "Research" | "Experiment";
 
 export interface WorkEntry {
@@ -92,30 +101,78 @@ export interface WorkEntry {
   kind: WorkKind;
   /** Year first shipped (or started, for research entries). */
   year: number;
+  /**
+   * Route to the entry's page. EMPTY STRING means the entry has no page
+   * yet (e.g. Labeler, D-023) — indexes render it without a link.
+   */
   href: string;
 }
 
+export interface ProjectsIndexCopy {
+  kicker: string;
+  heading: string;
+  intro: string;
+}
+
 /* ------------------------------------------------------------------ */
-/* Work detail: Akita                                                  */
+/* Akita — coming soon page (D-023; not a case study)                  */
 /* ------------------------------------------------------------------ */
 
 export interface AkitaCopy {
   name: string;
-  overview: string;
-  whatItDoes: string[];
-  perCountryAdaptivity: string;
-  capabilities: string[];
-  demo: {
-    heading: string; // TODO(content)
-    body: string; // TODO(content)
-    ctaLabel: string; // TODO(content)
-    ctaHref: string; // TODO(content)
+  /** The per-country insight, brief form (sign languages are national). */
+  insight: {
+    heading: string;
+    body: string;
   };
-  documentation: {
-    heading: string; // TODO(content)
-    body: string; // TODO(content)
-    ctaHref: string; // TODO(content)
+  features: {
+    heading: string;
+    items: string[];
   };
+  /** Waitlist interest — mailto until Phase 2 wires the form. */
+  waitlistCta: { label: string; href: string };
+  /** Partnership interest — mailto until Phase 2 wires the form. */
+  partnerCta: { label: string; href: string };
+}
+
+/* ------------------------------------------------------------------ */
+/* Partners page (D-023)                                               */
+/* ------------------------------------------------------------------ */
+
+export interface PartnersCopy {
+  heading: string;
+  intro: string;
+  why: {
+    heading: string;
+    body: string;
+  };
+  who: {
+    heading: string;
+    intro: string;
+    groups: string[];
+  };
+  offer: {
+    heading: string;
+    items: string[];
+  };
+  cta: { label: string; href: string };
+}
+
+/* ------------------------------------------------------------------ */
+/* Legal shells (D-023 — pages exist, copy pending)                    */
+/* ------------------------------------------------------------------ */
+
+export interface LegalPageCopy {
+  heading: string;
+  /** Short status line, e.g. "This page is being finalized." */
+  status: string;
+  /** Honest body — no invented legal text (D-014 convention). */
+  body: string;
+}
+
+export interface LegalCopy {
+  privacy: LegalPageCopy;
+  terms: LegalPageCopy;
 }
 
 /* ------------------------------------------------------------------ */
@@ -226,9 +283,12 @@ export interface Dictionary {
   siteMeta: SiteMeta;
   navItems: NavItem[];
   homeCopy: HomeCopy;
-  workEntries: WorkEntry[];
+  projectEntries: WorkEntry[];
+  projectsIndex: ProjectsIndexCopy;
   akitaCopy: AkitaCopy;
   labelerCopy: LabelerCopy;
+  partnersCopy: PartnersCopy;
+  legalCopy: LegalCopy;
   labIdentityLine: string;
   labEntries: LabEntry[];
   aboutCopy: AboutCopy;

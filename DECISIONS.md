@@ -387,6 +387,87 @@ library, no middleware rewrites:
 server components), zero new dependencies, no middleware rewrite
 complexity, and the pure detection core is unit-testable in isolation.
 
+## D-023 — Argonath-first IA restructure: /work → /projects, Labeler demoted, Partners elevated
+
+**Context:** User-approved pivot (supersedes the /work-centric IA): the
+studio is the hero of the site. Akita is a flagship **in development /
+coming soon** project whose page collects waitlist + partnership
+interest — no app-store links, no full case study. Labeler shrinks to a
+small in-development card with **no page and no application form** on
+the main site. Partnership becomes a first-class page.
+
+**Decision:**
+- The `/work` tree is deleted and replaced by `/projects`
+  (`app/projects/page.tsx` index, `app/projects/akita/page.tsx` coming
+  soon, `app/projects/[slug]/page.tsx` for the seeded research/
+  experiment entries — the old `work/[slug]` code moved verbatim). The
+  `workEntries` const is renamed `projectEntries` (type name `WorkEntry`
+  kept stable so `CaseStudy` and consumers don't churn).
+- `WorkStatus` gains **"In development"**; both products carry it
+  (nothing is "Live" today). `Tag` gains a matching variant: accent
+  outline (border-accent/text-accent) — visible but quieter than the
+  Live fill, distinct from Research's ink outline.
+- `WorkEntry.href` may now be `""`, meaning "no page yet" — indexes
+  render the row unlinked. Labeler is the first such entry.
+- `app/partners/page.tsx` is a first-class page (why / who / offer +
+  mailto CTA). `app/privacy` + `app/terms` are designed shells with an
+  honest "This page is being finalized" state — routes exist, copy does
+  not; no footer links until the copy is real.
+- Nav becomes PROJECTS · LAB · PARTNERS · ABOUT · CONTACT.
+- `akitaCopy` is restructured from case-study shape to coming-soon
+  shape (`insight`, `features`, `waitlistCta`, `partnerCta`); strings
+  carry over from the former per-country/capabilities copy. Waitlist and
+  partnership CTAs are mailto ("Akita waitlist" / "Akita partnership",
+  URL-encoded via the shared helper) until Phase 2 wires the form.
+- `ApplyCTA`/`ApplyForm` have no callers now but are **kept, marked
+  @deprecated** — Phase 2 generalizes them into the studio intake form
+  (with `/api/apply`) behind the same Supabase flag.
+- The home page keeps its glyph hero and research-focus section; the
+  equal live-work pair is replaced by a featured-projects block: Akita
+  leads (display-2, waitlist CTA), Labeler sits smaller in a hairline
+  frame — no link, no form. The archive block feeds `projectEntries`.
+
+**Rationale:** The studio is the product; Akita is its public proof-of-
+work in progress. Selling waitlist/partnership interest on a coming-soon
+page is honest; a full case study for an unreleased product would not
+be. Labeler's application flow moves off the main site entirely until
+Phase 2.
+
+## D-024 — Redirect strategy: next.config redirects, not redirect pages
+
+**Context:** The /work→/projects restructure (D-023) breaks existing
+URLs; the tree of redirect targets is small and fixed.
+
+**Decision:** All five redirects (`/work`, `/work/akita`, `/work/labeler`,
+`/work/signal-field`, `/work/parallax-loom`) live in `next.config.ts`
+with `permanent: true` (308). No redirect pages, no middleware rules.
+
+**Rationale:** One auditable table, zero runtime page code, and 308
+preserves link equity. `/work/labeler` targets `/projects` (not
+`/projects/labeler`, which deliberately 404s) because Labeler has no
+page — the redirect lands on the archive where Labeler appears as a
+card, which is the closest honest equivalent.
+
+## D-025 — Static-legal-shell convention + unlinked-archive-row contract
+
+**Context:** Privacy/terms must exist as routes before launch without
+inventing legal text (D-014 forbids the literal `TODO(content)` token in
+visible HTML), and Labeler must appear in the archive without a page.
+
+**Decision:**
+- Legal shells render a designed dashed-frame block ("This page is
+  being finalized." + honest body + contact mailto). The stub state is
+  copy in the dictionary (`legalCopy`), so the D-014 designed-marker
+  convention holds and translating later is a one-file edit. Footer
+  links stay out until real copy lands.
+- `WorkEntry.href === ""` is the single source of truth for "no page":
+  every index (home archive, /projects) renders such rows unlinked —
+  no per-page special-casing, and a future unlinked entry works by
+  setting one field.
+
+**Rationale:** One convention beats N special cases; the type system
+(D-022) keeps both dictionaries honest about which entries have pages.
+
 ## D-022 — Dictionaries: en.ts/es.ts with compile-time key parity
 
 **Context:** Splitting `content/site.ts` into per-locale dictionaries

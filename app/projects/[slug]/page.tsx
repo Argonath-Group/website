@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { workEntries } from "@/content/site";
+import { projectEntries } from "@/content/site";
 import { CaseStudy } from "@/components/case-study/CaseStudy";
 import { Prose } from "@/components/ui/Prose";
 import { Reveal } from "@/components/ui/Reveal";
 
-// Static pages exist for these; the dynamic segment covers the rest.
+// Static pages exist for akita; labeler has no page (D-023).
 const staticSlugs = new Set(["akita", "labeler"]);
 
 export function generateStaticParams() {
-  return workEntries
+  return projectEntries
     .filter((entry) => !staticSlugs.has(entry.slug))
     .map((entry) => ({ slug: entry.slug }));
 }
@@ -20,26 +20,26 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const entry = workEntries.find((e) => e.slug === slug);
-  if (!entry) return { title: "Work" };
+  const entry = projectEntries.find((e) => e.slug === slug);
+  if (!entry) return { title: "Projects" };
   return { title: entry.name, description: entry.oneLiner };
 }
 
 /**
- * /work/[slug] — detail pages for research/experiment archive entries
- * (signal-field, parallax-loom; the live pair has dedicated static
- * pages). These entries are seeded and not yet fully documented, so the
- * page renders through the shared CaseStudy template (D-006) with the
- * entry's real archive data and an honest, designed placeholder block —
- * never a raw dev marker or an invented case study.
+ * /projects/[slug] — detail pages for research/experiment archive
+ * entries (signal-field, parallax-loom; Akita has its dedicated
+ * coming-soon page, Labeler has none — D-023). Moved verbatim from the
+ * former work/[slug] route: the shared CaseStudy template (D-006) with
+ * the entry's real archive data and an honest, designed placeholder
+ * block — never a raw dev marker or an invented case study.
  */
-export default async function WorkDetailPage({
+export default async function ProjectDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = workEntries.find((e) => e.slug === slug);
+  const entry = projectEntries.find((e) => e.slug === slug);
   if (!entry || staticSlugs.has(slug)) notFound();
 
   return (

@@ -22,7 +22,7 @@ import type { WorkEntry } from "@/content/site";
  *   />
  *
  * The template renders, in order:
- *   1. breadcrumb back to /work
+ *   1. breadcrumb back to /projects
  *   2. hero header — status Tag, entry name, one-line description
  *   3. numbered content sections (title + your body nodes)
  *   4. optional footer slot (CTAs, cross-links)
@@ -37,7 +37,7 @@ export interface CaseStudySection {
 
 export interface CaseStudyProps {
   entry: WorkEntry;
-  /** Breadcrumb label; defaults to "← Work". */
+  /** Breadcrumb label; defaults to "← Projects". */
   backLabel?: string;
   sections: CaseStudySection[];
   /** CTA / cross-link slot rendered after the last section. */
@@ -46,7 +46,7 @@ export interface CaseStudyProps {
 
 export function CaseStudy({
   entry,
-  backLabel = "← Work",
+  backLabel = "← Projects",
   sections,
   footer,
 }: CaseStudyProps) {
@@ -57,7 +57,7 @@ export function CaseStudy({
         <Container>
           <nav aria-label="Breadcrumb" className="mb-10 md:mb-16">
             <Link
-              href="/work"
+              href="/projects"
               className="font-mono text-meta uppercase tracking-wide text-gray-600 transition-colors hover:text-accent"
             >
               {backLabel}

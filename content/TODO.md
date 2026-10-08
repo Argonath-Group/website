@@ -1,22 +1,44 @@
 # content TODOs
 
-Every `// TODO(content)` stub in `content/site.ts`, in one place. Do not invent
-facts — replace stubs only with confirmed copy from the studio.
+Every `// TODO(content)` stub in `content/dictionaries/en.ts` (mirrored in
+`es.ts` with `TODO(content): translate` markers), in one place. Do not
+invent facts — replace stubs only with confirmed copy from the studio.
+
+## Phase 1b restructure (D-023) — new stubs
+
+- `homeCopy.featuredProjects.heading` — heading for the featured-projects
+  block ("Featured projects" is first-draft).
+- `projectsIndex` (kicker, heading, intro) — projects archive header copy.
+- `projectEntries[].year` for akita / labeler — confirm years (products
+  are in development; years are placeholders).
+- `projectEntries` (signal-field, parallax-loom) — seeded future entries;
+  confirm slugs, names, one-liners, years, or remove.
+- `projectEntries.labeler.href` — empty while Labeler has no page; set a
+  route if Labeler ever graduates to one.
+- `akitaCopy.insight` — confirm heading ("The insight") and the
+  per-country narrative (carries over from the former
+  `perCountryAdaptivity`; Ecuador-first, LatAm expansion framing still
+  needs studio confirmation).
+- `akitaCopy.features.items` — confirm the feature list.
+- `akitaCopy.waitlistCta` / `akitaCopy.partnerCta` — labels + mailto
+  subjects ("Akita waitlist" / "Akita partnership"); Phase 2 replaces
+  the mailto hrefs with the wired intake form.
+- `partnersCopy` — the whole section is first-draft framing: intro, why-
+  partner body, the four "who we'd like to hear from" groups, and the
+  offer list all need studio confirmation (no partner categories or
+  claims are final).
+- `legalCopy.privacy` / `legalCopy.terms` — both pages ship as designed
+  shells; real legal text must replace the stubs before any footer link
+  goes live.
+
+## Pre-restructure stubs (unchanged, still open)
 
 - `homeCopy.focus.heading` — section heading for the R&D focus blocks.
 - `homeCopy.focus.blocks[].description` — descriptions for Visual Language Systems / Human-in-the-Loop Data / Adaptive Interfaces.
-- `homeCopy.liveWork.heading` — heading for the live work section.
 - `homeCopy.labTeaser` (heading, body, ctaLabel) — lab teaser copy.
 - `homeCopy.aboutTeaser` (heading, body, ctaLabel) — about teaser copy.
 - `homeCopy.contactCta` (heading, body, ctaLabel) — contact CTA copy.
-- `workEntries[].year` for akita / labeler — confirm ship years.
-- `workEntries` (signal-field, parallax-loom) — seeded future entries; confirm slugs, names, one-liners, years, or remove.
-- `akitaCopy.whatItDoes` — confirm capability statements.
-- `akitaCopy.perCountryAdaptivity` — confirm adaptivity narrative.
-- `akitaCopy.capabilities` — confirm capability list.
-- `akitaCopy.demo` (heading, body, ctaLabel, ctaHref) — copy + real demo URL.
-- `akitaCopy.documentation` (heading, body, ctaHref) — copy + real docs URL.
-- `labelerCopy.overview` — confirm overview.
+- `labelerCopy.overview` — confirm overview (kept for the deprecated ApplyCTA/Phase 2 intake; no page renders it today).
 - `labelerCopy.forCompanies.points` — confirm points.
 - `labelerCopy.forProfessionals.points` — confirm points.
 - `labelerCopy.howItWorks.steps` — confirm steps.
@@ -36,15 +58,15 @@ facts — replace stubs only with confirmed copy from the studio.
   to `https://argonathgroup.com`; confirm the real domain (or set
   `NEXT_PUBLIC_SITE_URL`) before launch. The OG image, sitemap, and
   robots output all derive from it.
-- `work/[slug]` detail pages (signal-field, parallax-loom) — pages ship
-  a designed "case study in progress" placeholder; confirm or write the
-  real case-study content for each seeded entry (see also
-  `workEntries` above).
+- `projects/[slug]` detail pages (signal-field, parallax-loom) — pages
+  ship a designed "case study in progress" placeholder; confirm or write
+  the real case-study content for each seeded entry (see also
+  `projectEntries` above).
 - Ecuador-first positioning (studio correction) — all Akita and Labeler
   copy is anchored to Ecuador-first + Latin America expansion, with NO
   ASL or European sign-language coverage claimed. The expansion framing
-  in `akitaCopy.perCountryAdaptivity` and the regional phrasing in
-  `labelerCopy` still need final confirmation from the studio.
+  in `akitaCopy.insight` and the regional phrasing in `labelerCopy`
+  still need final confirmation from the studio.
 
 ## Required Supabase setup (D-010)
 

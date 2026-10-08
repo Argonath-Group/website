@@ -7,7 +7,8 @@ import { navItems, siteMeta, type Locale } from "@/content/site";
 import { LocaleToggle } from "./LocaleToggle";
 
 /**
- * Nav — site header: wordmark + WORK · LAB · ABOUT · CONTACT.
+ * Nav — site header: wordmark + PROJECTS · LAB · PARTNERS · ABOUT ·
+ * CONTACT (labels/hrefs from the dictionary's navItems, D-023).
  *
  * Desktop: inline mono links with aria-current on the active route,
  * plus the EN/ES locale toggle (D-021). Mobile (≤md): a disclosure
