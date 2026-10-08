@@ -193,7 +193,7 @@ async function notifyInquiry(input: InquiryInput): Promise<void> {
   try {
     const { Resend } = await import("resend");
     const resend = new Resend(apiKey);
-    const from = process.env.RESEND_FROM ?? "notifications@argonathgroup.com";
+    const from = process.env.RESEND_FROM ?? "notifications@updates.argonathgroup.com";
     const subject = mailtoSubjects[input.intent];
 
     // (a) Notification to the studio.

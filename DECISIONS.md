@@ -551,3 +551,19 @@ already treats every downstream failure as non-fatal). Both vars are
 server-only — never `NEXT_PUBLIC_`. The module is dynamically imported
 so the flag-off request path never loads it. Confirmation copy comes
 from the dictionary, keeping email text in the content layer.
+
+## D-029 — Resend sender domain: updates.argonathgroup.com
+
+**Context:** The domain verified in Resend is the subdomain
+`updates.argonathgroup.com`, not the apex. The D-028 code fallback
+defaulted the `From` address to `notifications@argonathgroup.com` (apex),
+which Resend rejects for unverified domains — notification emails would
+fail silently (non-fatal, but the team would never see them).
+
+**Decision:** The `RESEND_FROM` fallback is now
+`notifications@updates.argonathgroup.com`. `RESEND_FROM` remains
+overridable via env for future sender-address changes without a deploy.
+`.env.example` documents the verified subdomain.
+
+**Rationale:** The fallback must match what is actually verified; an env
+override is the escape hatch, not the primary mechanism.
